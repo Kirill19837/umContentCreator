@@ -1,0 +1,5 @@
+﻿{
+  "BaseApiUrl": "https://api.openai.com/v1/completions",
+  "ApiKey": "",
+  "ChatGPTModel": "text-davinci-003"
+}

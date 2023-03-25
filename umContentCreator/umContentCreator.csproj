@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <Title>UmContentCreator</Title>
+        <Authors>OSKI solutions</Authors>
+        <Copyright>MIT</Copyright>
+        <RepositoryUrl>https://github.com/Kirill19837/umContentCreator</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\umContentCreator.Core\umContentCreator.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="App_Plugins\UmContentCreator\Styles" />
+    </ItemGroup>
+
+</Project>
