@@ -1,0 +1,23 @@
+﻿<div class="settings" ng-controller="UmContentCreatorSettingsController">
+    <div class="settings-container">
+        <h1>Um Content Creator Settings</h1>
+        <form class="settingsForm" name="settingsForm">
+            <div class="input">
+                <label for="baseApiUrl">Input Chat GPT Api Url:</label>
+                <input id="baseApiUrl" ng-model="model.baseApiUrl" type="text" required>
+            </div>
+            <div class="input">
+                <label for="models">Select Chat GPT Model:</label>
+                <select id="models" ng-model="model.chatGPTModel" ng-options="model for model in availableModels"
+                        required></select>
+            </div>
+            <div class="input">
+                <label for="apiKey">Enter your API key:</label>
+                <input id="apiKey" ng-model="model.apiKey" required type="password">
+            </div>
+            <div>
+                <button class="submit" ng-click="save()" ng-disabled="settingsForm.$invalid" type="button">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
