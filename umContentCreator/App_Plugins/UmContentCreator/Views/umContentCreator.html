@@ -9,10 +9,10 @@
     </div>
 
     <div>
-        <label for="tokensSlider">Max tokens per response:</label>
+        <label for="tokensSlider">Max words per response:</label>
         <input type="range"
                id="tokensSlider"
-               min="100"
+               min="50"
                max="4096"
                ng-model="selectedTokens"
                step="1">
@@ -20,25 +20,24 @@
     </div>
 
     <div>
-        <label for="temperatureSlider">Temperature:</label>
-        <span class="temperature-hint">Higher = more creative/chaotic</span>
+        <label for="temperatureSlider">Model behaviour:</label>
         <input type="range"
                id="temperatureSlider"
-               min="0"
-               max="2"
+               min="0.2"
+               max="1.0"
                ng-model="selectedTemperature"
-               step="0.1">
-        <span>{{selectedTemperature.toFixed(2)}}</span>
+               step="0.2">
+        <span class="temperature-hint">{{getTemperatureLabel(selectedTemperature)}}</span>
     </div>
 
     <div>
-        <label for="promptTextarea">Enter a prompt:</label>
+        <label for="promptTextarea">What would you like to generate?</label>
         <textarea id="promptTextarea"
-                  ng-model="prompt" rows="3"></textarea>
+                  ng-model="prompt" rows="3" placeholder="Enter a prompt..."></textarea>
     </div>
 
     <div>
         <button ng-click="generate()">Generate</button>
-        <img ng-show="isGenerating" src="https://media1.giphy.com/media/3o7bu3XilJ5BOiSGic/giphy.gif?cid=ecf05e47ss5nxpy2u42mk918q4clnnfq1boyb8v34ph55dor&rid=giphy.gif" alt="Loading...">
+        <img ng-show="isGenerating" src="/loading.gif" alt="Loading...">
     </div>
 </div>

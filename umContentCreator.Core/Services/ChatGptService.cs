@@ -1,8 +1,10 @@
 ﻿using System.Net.Http.Headers;
 using System.Text;
+using MarkdownSharp;
 using Newtonsoft.Json;
 using umContentCreator.Core.Interfaces;
 using umContentCreator.Core.Models;
+using static Umbraco.Cms.Core.Constants.PropertyEditors.Aliases;
 
 namespace umContentCreator.Core.Services;
 
@@ -40,26 +42,13 @@ public class ChatGptService : IChatGptService
         }
         var responseContent = await response.Content.ReadAsStringAsync();
         var responseObject = JsonConvert.DeserializeObject<dynamic>(responseContent);
-        return AddParagraphsToText(responseObject.choices[0].text.ToString(), 50);
-    }
-    
-    public static string AddParagraphsToText(string text, int wordsPerParagraph)
-    {
-        string[] words = text.Split(' ');
-        StringBuilder formattedText = new StringBuilder();
-        int wordCount = 0;
+        var returnedText = responseObject.choices[0].text.ToString();
 
-        foreach (string word in words)
+        if (model.PropertyEditorAlias is TinyMce)
         {
-            formattedText.Append(word + " ");
-            wordCount++;
-
-            if (wordCount % wordsPerParagraph == 0)
-            {
-                formattedText.Append("\n\n");
-            }
+            return new Markdown().Transform(returnedText);
         }
 
-        return formattedText.ToString();
+        return returnedText;
     }
 }

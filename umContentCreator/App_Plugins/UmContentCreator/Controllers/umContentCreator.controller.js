@@ -2,8 +2,15 @@
     function ($scope, $http, $routeParams, contentResource, notificationsService, editorState) {
         $scope.properties = [];
         $scope.selectedProperty = null;
-        $scope.selectedTokens = 100;
-        $scope.selectedTemperature = 0.7;
+        $scope.selectedTokens = 50;
+        $scope.selectedTemperature = 0.6;
+        $scope.temperatureLabels = {
+            0.2: 'Conservative',
+            0.4: 'Cautious',
+            0.6: 'Balanced',
+            0.8: 'Creative',
+            1.0: 'Adventurous'
+        };
         $scope.isGenerating = false;
         $scope.prompt = '';
         $scope.contentId = parseInt($routeParams.id, 10);
@@ -24,16 +31,20 @@
                 });
         };
 
+        $scope.getTemperatureLabel = function (temperatureValue) {
+            return $scope.temperatureLabels[temperatureValue];
+        };
+        
         $scope.generate = function () {
             if (!$scope.selectedProperty || !$scope.prompt) {
                 return;
             }
-
-            $scope.isGenerating = true;
             
             const content = editorState.current;
             const variant = content.variants[0];
-            const propertyToUpdate = variant.tabs[0].properties.find(function (property) {
+            const properties = variant.tabs.flatMap(t => t.properties);
+     
+            const propertyToUpdate = properties.find(function (property) {
                 return property.alias === $scope.selectedProperty.propertyAlias;
             });
 
@@ -42,10 +53,13 @@
                 return;
             }
 
+            $scope.isGenerating = true;
+            
             $http.post($scope.getGeneratedTextUrl, {
                 prompt: $scope.prompt,
                 maxTokens: $scope.selectedTokens,
-                temperature: $scope.selectedTemperature
+                temperature: $scope.selectedTemperature,
+                propertyEditorAlias: $scope.selectedProperty.propertyEditorAlias
             }).then(function (response) {
                 propertyToUpdate.value = response.data;
                 $scope.isGenerating = false;

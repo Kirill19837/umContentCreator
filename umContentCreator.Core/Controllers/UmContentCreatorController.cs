@@ -3,6 +3,7 @@ using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Web.Common.Controllers;
 using umContentCreator.Core.Interfaces;
 using umContentCreator.Core.Models;
+using static Umbraco.Cms.Core.Constants.PropertyEditors.Aliases;
 
 namespace umContentCreator.Core.Controllers;
 
@@ -30,11 +31,12 @@ public class UmContentCreatorController : UmbracoApiController
         var contentType = _contentTypeService.Get(content.ContentTypeId);
         
         var properties = contentType.PropertyTypes
-            .Where(pt => pt.PropertyEditorAlias is "Umbraco.TextBox" or "Umbraco.TinyMCE" or "Umbraco.TextArea")
+            .Where(pt => pt.PropertyEditorAlias is TextBox or TinyMce or TextArea)
             .Select(pt => new UmPropertyInfo
             {
                 PropertyName = pt.Name,
-                PropertyAlias = pt.Alias
+                PropertyAlias = pt.Alias,
+                PropertyEditorAlias = pt.PropertyEditorAlias
             });
 
         return Ok(properties);

@@ -2,7 +2,7 @@
     function ($scope, $http, $routeParams, contentResource, notificationsService, editorState) {
         $scope.properties = [];
         $scope.selectedProperty = null;
-        $scope.selectedTokens = 100;
+        $scope.selectedTokens = 50;
         $scope.selectedTemperature = 0.6;
         $scope.temperatureLabels = {
             0.2: 'Conservative',
@@ -58,7 +58,8 @@
             $http.post($scope.getGeneratedTextUrl, {
                 prompt: $scope.prompt,
                 maxTokens: $scope.selectedTokens,
-                temperature: $scope.selectedTemperature
+                temperature: $scope.selectedTemperature,
+                propertyEditorAlias: $scope.selectedProperty.propertyEditorAlias
             }).then(function (response) {
                 propertyToUpdate.value = response.data;
                 $scope.isGenerating = false;
