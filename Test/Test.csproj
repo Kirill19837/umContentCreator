@@ -6,30 +6,30 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Umbraco.Cms" Version="10.0.0"/>
+        <PackageReference Include="Umbraco.Cms" Version="10.0.0" />
     </ItemGroup>
 
     <ItemGroup>
         <!-- Opt-in to app-local ICU to ensure consistent globalization APIs across different platforms -->
-        <PackageReference Include="Microsoft.ICU.ICU4C.Runtime" Version="68.2.0.9"/>
-        <RuntimeHostConfigurationOption Include="System.Globalization.AppLocalIcu" Value="68.2.0.9" Condition="$(RuntimeIdentifier.StartsWith('linux')) or $(RuntimeIdentifier.StartsWith('win')) or ('$(RuntimeIdentifier)' == '' and !$([MSBuild]::IsOSPlatform('osx')))"/>
+        <PackageReference Include="Microsoft.ICU.ICU4C.Runtime" Version="68.2.0.9" />
+        <RuntimeHostConfigurationOption Include="System.Globalization.AppLocalIcu" Value="68.2.0.9" Condition="$(RuntimeIdentifier.StartsWith('linux')) or $(RuntimeIdentifier.StartsWith('win')) or ('$(RuntimeIdentifier)' == '' and !$([MSBuild]::IsOSPlatform('osx')))" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\umContentCreator.Core\umContentCreator.Core.csproj"/>
+        <None Include="App_Plugins\UmContentCreator\Controllers\umContentCreator.controller.js" />
+        <None Include="App_Plugins\UmContentCreator\Controllers\umContentCreatorSettings.controller.js" />
+        <None Include="App_Plugins\UmContentCreator\package.manifest" />
+        <None Include="App_Plugins\UmContentCreator\Views\umContentCreator.html" />
+        <None Include="App_Plugins\UmContentCreator\Views\umContentCreatorConfiguration.html" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="App_Plugins\UmContentCreator\Controllers\umContentCreator.controller.js"/>
-        <None Include="App_Plugins\UmContentCreator\Controllers\umContentCreatorSettings.controller.js"/>
-        <None Include="App_Plugins\UmContentCreator\package.manifest"/>
-        <None Include="App_Plugins\UmContentCreator\Views\umContentCreator.html"/>
-        <None Include="App_Plugins\UmContentCreator\Views\umContentCreatorConfiguration.html"/>
+        <Content Include="App_Plugins\UmContentCreator\lang\en-US.xml" />
+        <Content Include="App_Plugins\UmContentCreator\Styles\styles.css" />
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="App_Plugins\UmContentCreator\lang\en-US.xml"/>
-        <Content Include="App_Plugins\UmContentCreator\Styles\styles.css"/>
+      <ProjectReference Include="..\umContentCreator.Core\umContentCreator.Core.csproj" />
     </ItemGroup>
 
     <PropertyGroup>
