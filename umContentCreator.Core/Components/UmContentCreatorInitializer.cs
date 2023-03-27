@@ -22,7 +22,7 @@ public class UmContentCreatorInitializer : IComponent
     {
         try
         {
-            var contentTypes = _contentTypeService.GetAll();
+            var contentTypes = _contentTypeService.GetAll().ToList();
             _contentCreatorInjectorService.AddUmContentCreatorToExistingContentTypes(contentTypes);
             var contentModified = _contentCreatorInjectorService.GetContentModificationStatus();
 

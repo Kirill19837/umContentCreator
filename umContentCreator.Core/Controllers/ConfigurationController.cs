@@ -26,17 +26,4 @@ public class ConfigurationController : UmbracoApiController
         await _settingsService.SaveSettingsAsync(settings);
         return Ok();
     }
-
-    [HttpGet]
-    public IActionResult GetAvailableModels()
-    {
-        var models = new[]
-        {
-            "text-davinci-003",
-            "text-curie-001",
-            "text-babbage-001",
-            "text-ada-001"
-        };
-        return Ok(models);
-    }
 }

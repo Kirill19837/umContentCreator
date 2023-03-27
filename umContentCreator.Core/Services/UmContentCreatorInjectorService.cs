@@ -29,33 +29,16 @@ public class UmContentCreatorInjectorService : IUmContentCreatorInjectorService
         const string propertyName = "Content Creator";
         const string propertyTabName = "Content Creator";
 
-        var dataType = _dataTypeService.GetByEditorAlias(propertyEditorAlias).FirstOrDefault();
-        if (dataType == null)
-        {
-            var editor = new UmContentCreator(_editorFactory);
-            dataType = new DataType(editor, new ConfigurationEditorJsonSerializer())
-            {
-                Name = "umContentCreator"
-            };
-            _dataTypeService.Save(dataType);
-        }
-        
+        var dataType = GetDataType(propertyEditorAlias);
+
         foreach (var contentType in contentTypes)
         {
-            if (contentType.PropertyTypeExists(propertyEditorAlias)) continue;
-
-            var contentCreatorTab = contentType.PropertyGroups.FirstOrDefault(x => x.Name == propertyTabName);
-
-            if (contentCreatorTab == null)
+            if (contentType.PropertyTypeExists(propertyEditorAlias))
             {
-                contentCreatorTab = new PropertyGroup(new PropertyTypeCollection(true))
-                {
-                    Name = propertyTabName,
-                    Alias = propertyTabName.ToSafeAlias(_shortStringHelper)
-                };
-                contentType.PropertyGroups.Add(contentCreatorTab);
+                continue;
             }
 
+            var contentCreatorPropertyGroup = GetContentCreatorPropertyGroup(contentType, propertyTabName);
             var contentCreatorPropertyType = new PropertyType(_shortStringHelper, dataType, propertyEditorAlias)
             {
                 Name = propertyName,
@@ -63,7 +46,7 @@ public class UmContentCreatorInjectorService : IUmContentCreatorInjectorService
                 Mandatory = false
             };
 
-            contentCreatorTab.PropertyTypes.Add(contentCreatorPropertyType);
+            contentCreatorPropertyGroup.PropertyTypes?.Add(contentCreatorPropertyType);
             _contentModified = true;
         }
     }
@@ -71,5 +54,42 @@ public class UmContentCreatorInjectorService : IUmContentCreatorInjectorService
     public bool GetContentModificationStatus()
     {
         return _contentModified;
+    }
+    
+    private IDataType GetDataType(string propertyEditorAlias)
+    {
+        var dataType = _dataTypeService.GetByEditorAlias(propertyEditorAlias).FirstOrDefault();
+        if (dataType != null)
+        {
+            return dataType;
+        }
+        
+        var editor = new UmContentCreator(_editorFactory);
+        dataType = new DataType(editor, new ConfigurationEditorJsonSerializer())
+        {
+            Name = "umContentCreator"
+        };
+        _dataTypeService.Save(dataType);
+
+        return dataType;
+    }
+    
+    private PropertyGroup GetContentCreatorPropertyGroup(IContentTypeBase contentType, string propertyTabName)
+    {
+        var contentCreatorPropertyGroup = contentType.PropertyGroups.FirstOrDefault(x => x.Name == propertyTabName);
+
+        if (contentCreatorPropertyGroup != null)
+        {
+            return contentCreatorPropertyGroup;
+        }
+        
+        contentCreatorPropertyGroup = new PropertyGroup(new PropertyTypeCollection(true))
+        {
+            Name = propertyTabName,
+            Alias = propertyTabName.ToSafeAlias(_shortStringHelper)
+        };
+        contentType.PropertyGroups.Add(contentCreatorPropertyGroup);
+
+        return contentCreatorPropertyGroup;
     }
 }

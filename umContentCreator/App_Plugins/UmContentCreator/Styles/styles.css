@@ -77,10 +77,6 @@
 }
 
 /* Content creator */
-.um-content-creator h2 {
-    margin-bottom: 20px;
-}
-
 .um-content-creator div {
     margin-bottom: 10px;
 }
@@ -121,10 +117,18 @@
     background-color: #0056b3;
 }
 
-.um-content-creator img {
-    position: absolute;
-    right: 40%;
-    bottom: 25%;
-    border-radius: 100px;
+.um-content-creator .loading-container {
+    position: fixed;
+    bottom: 40%;
+    left: 40%;
+    text-align: center;
+    z-index: 999;
 }
 
+.um-content-creator img {
+    width: 400px;
+}
+
+.um-content-creator h2 {
+    margin: 0;
+}

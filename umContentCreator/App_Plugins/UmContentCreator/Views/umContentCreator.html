@@ -13,7 +13,7 @@
         <input type="range"
                id="tokensSlider"
                min="50"
-               max="4096"
+               max="2048"
                ng-model="selectedTokens"
                step="1">
         <span>{{selectedTokens}}</span>
@@ -38,6 +38,6 @@
 
     <div>
         <button ng-click="generate()">Generate</button>
-        <img ng-show="isGenerating" src="/loading.gif" alt="Loading...">
+        <img class="loading-container" src="/loading.gif" ng-show="isGenerating" alt="Loading...">
     </div>
 </div>
