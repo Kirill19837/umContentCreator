@@ -19,7 +19,7 @@
         $scope.updateNestedPropertyUrl = "/umbraco/api/UmContentCreator/UpdateNestedProperty";
         
         $scope.init = function () {
-            if (!$routeParams.section || $routeParams.section !== 'content' || isNaN($scope.contentId)) {
+            if ($routeParams.section === 'content' && !!$routeParams.create) {
                 return;
             }
             
