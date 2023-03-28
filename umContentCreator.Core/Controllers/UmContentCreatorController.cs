@@ -23,9 +23,9 @@ public class UmContentCreatorController : UmbracoApiController
     }
 
     [HttpGet]
-    public IActionResult GetProperties([FromQuery] int contentId)
+    public IActionResult GetProperties([FromQuery] string contentTypeKey)
     {
-        return Ok(_propertiesService.GetPropertiesByContentId(contentId));
+        return Ok(_propertiesService.GetPropertiesByContentTypeKey(contentTypeKey));
     }
 
     [HttpPost]

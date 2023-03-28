@@ -24,10 +24,9 @@ public class PropertiesService : IPropertiesService
       _contentService = contentService;
    }
 
-   public List<UmPropertyInfo> GetPropertiesByContentId(int contentId)
+   public List<UmPropertyInfo> GetPropertiesByContentTypeKey(string contentTypeKey)
    {
-       var content = GetContent(contentId);
-       var contentType = _contentTypeService.Get(content.ContentTypeId);
+       var contentType = _contentTypeService.Get(Guid.Parse(contentTypeKey));
        var textProperties = GetPropertiesFromContentType(contentType);
        
        AddPropertiesFromNestedContentItem(contentType, textProperties);
@@ -67,7 +66,7 @@ public class PropertiesService : IPropertiesService
            PropertyEditorAlias = propertyType.PropertyEditorAlias
        }).ToList();
    }
-
+   
    public bool UpdatePropertyFromNestedContent(UpdatePropertyModel model)
    {
        var content = GetContent(model.ContentId);

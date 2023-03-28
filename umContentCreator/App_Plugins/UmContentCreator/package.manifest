@@ -6,7 +6,8 @@
         }],
         "javascript": [
           "~/App_Plugins/UmContentCreator/Controllers/umContentCreator.controller.js",
-          "~/App_Plugins/UmContentCreator/Controllers/umContentCreatorSettings.controller.js"
+          "~/App_Plugins/UmContentCreator/Controllers/umContentCreatorSettings.controller.js",
+          "~/App_Plugins/UmContentCreator/Controllers/properties.service.js",
         ],
         "css": [
           "~/App_Plugins/UmContentCreator/Styles/styles.css"

@@ -2,6 +2,7 @@
     function ($scope, $http, notificationsService) {
         const saveUrl = "/Umbraco/Api/Configuration/SaveSettings";
         const loadUrl = "/Umbraco/Api/Configuration/LoadSettings";
+        const modelsUrl = "/Umbraco/Api/Configuration/GetAvailableModels";
         $scope.model = {};
         
         $scope.init = function () {
