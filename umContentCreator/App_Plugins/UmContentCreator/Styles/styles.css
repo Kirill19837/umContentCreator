@@ -119,14 +119,14 @@
 
 .um-content-creator .loading-container {
     position: fixed;
-    bottom: 40%;
-    left: 40%;
-    text-align: center;
-    z-index: 999;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
 }
 
 .um-content-creator img {
-    width: 400px;
+    max-width: 600px;
 }
 
 .um-content-creator h2 {

@@ -1,4 +1,5 @@
 ﻿<div class="um-content-creator" ng-controller="UmContentCreatorController">
+    <img class="loading-container" src="/loading.gif" alt="Loading..." ng-show="isGenerating">
     <div>
         <label for="propertyDropdown">Select a property:</label>
         <select id="propertyDropdown"
@@ -38,6 +39,5 @@
 
     <div>
         <button ng-click="generate()">Generate</button>
-        <img class="loading-container" src="/loading.gif" ng-show="configurationObject.isGenerating" alt="Loading...">
     </div>
 </div>
