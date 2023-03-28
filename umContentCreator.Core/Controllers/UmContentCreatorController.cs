@@ -29,7 +29,7 @@ public class UmContentCreatorController : UmbracoApiController
     }
 
     [HttpPost]
-    public IActionResult UpdateNestedProperty([FromBody] UpdatePropertyModel model)
+    public IActionResult UpdateNestedContentProperty([FromBody] UpdatePropertyModel model)
     {
         try
         {
