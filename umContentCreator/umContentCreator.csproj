@@ -1,22 +1,42 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <Title>UmContentCreator</Title>
-        <Authors>OSKI solutions</Authors>
-        <Copyright>MIT</Copyright>
-        <RepositoryUrl>https://github.com/Kirill19837/umContentCreator</RepositoryUrl>
-        <RepositoryType>git</RepositoryType>
+		<AssemblyVersion>1.0.2</AssemblyVersion>
+		<Version>1.0.2</Version>
+		<InformationalVersion>1.0.2</InformationalVersion>
+		<TargetFramework>net6.0</TargetFramework>
+		<ContentTargetFolders>.</ContentTargetFolders>
+		<Product>UmContentCreator</Product>
+		<PackageId>UmContentCreator</PackageId>
+		<Title>UmContentCreator</Title>
+		<PackageTags>umbraco-marketplace</PackageTags>
+		<Company>$(Authors)</Company>
+		<Authors>OSKI solutions</Authors>
+		<Description></Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\umContentCreator.Core\umContentCreator.Core.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		
+		<Content Include="App_Plugins\UmContentCreator\**">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
+		</Content>
+		
+		<None Include="build\**">
+			<Pack>true</Pack>
+			<PackagePath>buildTransitive</PackagePath>
+		</None>
+		
+	</ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="App_Plugins\UmContentCreator\Styles" />
-    </ItemGroup>
+	<ItemGroup>
+		<None Include="loading.gif" Pack="true" PackPath="\" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+	  <ProjectReference Include="..\umContentCreator.Core\umContentCreator.Core.csproj" />
+	</ItemGroup>
 
 </Project>

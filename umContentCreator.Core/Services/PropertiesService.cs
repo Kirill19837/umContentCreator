@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.PropertyEditors;
 using Umbraco.Cms.Core.Services;
@@ -22,39 +23,50 @@ public class PropertiesService : IPropertiesService
       _contentService = contentService;
    }
 
-   public List<UmPropertyInfo> GetPropertiesByContentTypeKey(string contentTypeKey)
+   public List<UmPropertyInfo> GetPropertiesOfContent(string contentTypeKey, int contentId)
    {
+       var content = GetContent(contentId);
        var contentType = _contentTypeService.Get(Guid.Parse(contentTypeKey));
        var textProperties = GetPropertiesFromContentType(contentType);
-       
-       AddPropertiesFromNestedContentItem(contentType, textProperties);
+
+       //AddPropertiesFromComposedContent(contentType, textProperties);
+       AddPropertiesFromNestedContentItem(content, textProperties);
 
        return textProperties;
    }
 
-   private void AddPropertiesFromNestedContentItem(IContentTypeBase contentType, List<UmPropertyInfo> textProperties)
+   private void AddPropertiesFromComposedContent(IContentType contentType, List<UmPropertyInfo> umPropertyInfos)
    {
-       var nestedContentPropertyTypes = contentType.PropertyTypes
-           .Where(pt => pt.PropertyEditorAlias == NestedContent).ToList();
+       foreach (var contentTypeComposition in contentType.ContentTypeComposition)
+       {
+           var composedContentType = _contentTypeService.Get(contentTypeComposition.Alias);
+           //AddPropertiesFromNestedContentItem(composedContentType, umPropertyInfos);
+           umPropertyInfos.AddRange(GetPropertiesFromContentType(composedContentType));
+           AddPropertiesFromComposedContent(composedContentType, umPropertyInfos);
+       }
+   }
+
+   private void AddPropertiesFromNestedContentItem(IContentBase content, List<UmPropertyInfo> textProperties)
+   {
+       var nestedContentPropertyTypes = content.Properties
+           .Where(pt => pt.PropertyType.PropertyEditorAlias == NestedContent).ToList();
 
        foreach (var nestedContentPropertyType in nestedContentPropertyTypes)
        {
-           var nestedContentDataType = _dataTypeService.GetDataType(nestedContentPropertyType.DataTypeId);
-           var nestedContentConfig = nestedContentDataType?.ConfigurationAs<NestedContentConfiguration>();
-           var nestedContentTypes = nestedContentConfig?.ContentTypes ?? Enumerable.Empty<NestedContentConfiguration.ContentType>();
+           var nestedContentJson = content.GetValue<string>(nestedContentPropertyType.PropertyType.Alias);
+           var nestedContentItems = JsonConvert.DeserializeObject<List<NestedContentItem>>(nestedContentJson);
 
-           foreach (var nestedContentType in nestedContentTypes)
+           foreach (var nestedContentItem in nestedContentItems)
            {
-               var nestedItemTypeInstance = _contentTypeService.Get(nestedContentType.Alias!);
+               var nestedItemTypeInstance = _contentTypeService.Get(nestedContentItem.NcContentTypeAlias);
                textProperties.AddRange(GetPropertiesFromContentType(nestedItemTypeInstance));
-               AddPropertiesFromNestedContentItem(nestedItemTypeInstance, textProperties);
            }
        }
    }
 
-   private static List<UmPropertyInfo> GetPropertiesFromContentType(IContentTypeBase contentType)
+   private static List<UmPropertyInfo> GetPropertiesFromContentType(IContentType contentType)
    {
-       var textPropertyTypes = contentType.PropertyTypes
+       var textPropertyTypes = contentType.CompositionPropertyTypes
            .Where(pt => pt.PropertyEditorAlias is TextBox or TinyMce or TextArea);
 
        return textPropertyTypes.Select(propertyType => new UmPropertyInfo

@@ -14,7 +14,6 @@ public class UmContentCreatorComposer : IComposer
     public void Compose(IUmbracoBuilder builder)
     {
         builder.AddNotificationHandler<ContentTypeSavingNotification, ContentTypeEventsHandler>();
-        builder.Components().Append<UmContentCreatorInitializer>();
         builder.Services.AddTransient<ISettingsService, SettingsService>();
         builder.Services.AddTransient<IChatGptService, ChatGptService>();
         builder.Services.AddTransient<IUmContentCreatorInjectorService, UmContentCreatorInjectorService>();

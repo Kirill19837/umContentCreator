@@ -5,5 +5,4 @@ namespace umContentCreator.Core.Interfaces;
 public interface IUmContentCreatorInjectorService
 {
     void AddUmContentCreatorToExistingContentTypes(IEnumerable<IContentType> contentTypes);
-    bool GetContentModificationStatus();
 }

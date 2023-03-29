@@ -2,6 +2,7 @@
     function ($scope, $http, $routeParams, contentResource, notificationsService, editorState, umContentCreatorService) {
         $scope.configurationObject = umContentCreatorService.getInitialValues();
         $scope.properties = [];
+        let activeBlockListItem = null;
         
         $scope.init = function () {
             if ($routeParams.section === 'content' && !!$routeParams.create || $routeParams.section === 'settings') {
@@ -10,7 +11,8 @@
 
             const { content, properties } = umContentCreatorService.getPropertiesAndContent(editorState);
             let contentTypeKey = content.contentTypeKey;
-            const  activeBlockListItem = umContentCreatorService.getActiveBlockListItem(properties);
+
+            activeBlockListItem = umContentCreatorService.getActiveBlockListItem(properties);
 
             if (activeBlockListItem) {
                 contentTypeKey = activeBlockListItem.data.contentTypeKey;
@@ -59,7 +61,7 @@
                         $scope.configurationObject.isGenerating = umContentCreatorService.updatePropertyInNestedContent(content, selectedPropertyAlias, generatedText);
                         break;
                     }
-                    case "Umbraco.BlockList": {
+                    case "Umbraco.BlockList" || "Umbraco.BlockGrid" : {
                         $scope.configurationObject.isGenerating = umContentCreatorService.updatePropertyInBlockListItem(content, selectedPropertyAlias, propertyToUpdate, generatedText);
                         break;
                     }

@@ -4,6 +4,9 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>disable</Nullable>
+        <Title>umContentCreator.Core</Title>
+        <Authors>OSKI solutions</Authors>
+        <Description>This package contains core logic of umContentCteator package.</Description>
     </PropertyGroup>
 
     <ItemGroup>
