@@ -49,6 +49,6 @@ public class ChatGptService : IChatGptService
             return new Markdown().Transform(returnedText);
         }
 
-        return returnedText.Substring(2);
+        return returnedText;
     }
 }

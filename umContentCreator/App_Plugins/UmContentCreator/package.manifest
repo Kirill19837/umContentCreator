@@ -1,15 +1,19 @@
 ﻿{
-        "dashboards": [{
-          "alias": "UmContentEditor",
-          "view": "/App_Plugins/UmContentCreator/Views/umContentCreatorConfiguration.html",
-          "sections": [ "content" ]
-        }],
+        "dashboards": [
+                {
+                        "alias": "UmContentEditor",
+                        "view": "/App_Plugins/UmContentCreator/Views/umContentCreatorConfiguration.html",
+                        "sections": [
+                                "content"
+                        ]
+                }
+        ],
         "javascript": [
-          "~/App_Plugins/UmContentCreator/Controllers/umContentCreator.controller.js",
-          "~/App_Plugins/UmContentCreator/Controllers/umContentCreatorSettings.controller.js",
-          "~/App_Plugins/UmContentCreator/Services/umContentCreator.service.js",
+                "~/App_Plugins/UmContentCreator/Controllers/umContentCreator.controller.js",
+                "~/App_Plugins/UmContentCreator/Controllers/umContentCreatorSettings.controller.js",
+                "~/App_Plugins/UmContentCreator/Services/umContentCreator.service.js"
         ],
         "css": [
-          "~/App_Plugins/UmContentCreator/Styles/styles.css"
+                "~/App_Plugins/UmContentCreator/Styles/styles.css"
         ]
 }

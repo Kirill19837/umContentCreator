@@ -1,5 +1,5 @@
 ﻿<div class="um-content-creator" ng-controller="UmContentCreatorController">
-    <img class="loading-container" src="/loading.gif" alt="Loading..." ng-show="isGenerating">
+    <img class="loading-container" src="/loading.gif" alt="Loading..." ng-show="configurationObject.isGenerating">
     <div>
         <label for="propertyDropdown">Select a property:</label>
         <select id="propertyDropdown"
@@ -17,7 +17,7 @@
                max="2048"
                ng-model="configurationObject.selectedTokens"
                step="1">
-        <span>{{selectedTokens}}</span>
+        <span>{{configurationObject.selectedTokens}}</span>
     </div>
 
     <div>
@@ -28,7 +28,7 @@
                max="1.0"
                ng-model="configurationObject.selectedTemperature"
                step="0.2">
-        <span class="temperature-hint">{{getTemperatureLabel(selectedTemperature)}}</span>
+        <span class="temperature-hint">{{getTemperatureLabel(configurationObject.selectedTemperature)}}</span>
     </div>
 
     <div>

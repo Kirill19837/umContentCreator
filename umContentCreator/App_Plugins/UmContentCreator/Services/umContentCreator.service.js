@@ -1,76 +1,114 @@
-﻿angular.module('umbraco').controller('UmContentCreatorController',
-    function ($scope, $http, $routeParams, contentResource, notificationsService, editorState, umContentCreatorService) {
-        $scope.configurationObject = umContentCreatorService.getInitialValues();
-        $scope.properties = [];
-
-        $scope.init = function () {
-            if ($routeParams.section === 'content' && !!$routeParams.create || $routeParams.section === 'settings') {
-                return;
+﻿angular.module('umbraco').factory('umContentCreatorService', function ($http, contentResource, notificationsService) {
+    const blockListAlias = 'Umbraco.BlockList';
+    return {
+        getInitialValues: function () {
+            return {
+                selectedProperty: null,
+                selectedTokens: 50,
+                selectedTemperature: 0.6,
+                temperatureLabels: {
+                    0.2: 'Conservative',
+                    0.4: 'Cautious',
+                    0.6: 'Balanced',
+                    0.8: 'Creative',
+                    1.0: 'Adventurous'
+                },
+                isGenerating: false,
+                prompt: ''
+            };
+        },
+        getProperties: function (contentTypeKey, contentId) {
+            return $http.get("/umbraco/api/UmContentCreator/GetProperties", {
+                params: 
+                    {
+                        contentTypeKey: contentTypeKey,
+                        contentId: contentId
+                    }
+            });
+        },
+        getGeneratedText: function (payload) {
+            return $http.post("/umbraco/api/UmContentCreator/GetGeneratedText", payload);
+        },
+        getPropertiesAndContent: function (editorState) {
+            const content = editorState.current;
+            const variant = content.variants[0];
+            const properties = variant.tabs.flatMap(t => t.properties);
+            return {content, properties};
+        },
+        getActiveBlockListItem: function (properties) {
+            const blockListProperties = properties.filter(p => p.editor === blockListAlias);
+            let activeBlockListItem = null;
+            for (const blockListProperty of blockListProperties) {
+                const blockListItems = blockListProperty.value.layout[blockListAlias]
+                    .map(p => p.$block);
+                activeBlockListItem = blockListItems.find(i => i?.active === true);
             }
+            return activeBlockListItem;
+        },
+        findProperty: function (properties, propertyAlias) {
+            for (const property of properties) {
+                if (property?.alias === propertyAlias) {
+                    return property;
+                }
 
-            const { content, properties } = umContentCreatorService.getPropertiesAndContent(editorState);
-            let contentTypeKey = content.contentTypeKey;
-            let activeBlockListItem = umContentCreatorService.getActiveBlockListItem(properties);
+                if (property.editor === blockListAlias) {
+                    const value = property.value;
+                    const blockListItems = value.layout[blockListAlias]
+                        .map(p => p.$block);
+                    const activeBlockListItem = blockListItems?.find(i => i?.active === true);
+                    const activeContentUdi = activeBlockListItem?.data?.udi;
+                    const contentData = value?.contentData?.find(cd => cd?.udi === activeContentUdi);
 
-            if (activeBlockListItem) {
-                contentTypeKey = activeBlockListItem.data.contentTypeKey;
+                    if (!contentData) {
+                        continue;
+                    }
+                    contentData.editor = blockListAlias;
+                    return contentData;
+                }
+                if (property.editor === "Umbraco.NestedContent") {
+                    return property;
+                }
             }
+            return null;
+        },
+        updateNestedContentProperty: function (payload) {
+            return $http.post("/umbraco/api/UmContentCreator/UpdateNestedContentProperty", payload);
+        },
+        updatePropertyInContent: function (propertyToUpdate, generatedText, content) {
+            propertyToUpdate.value = generatedText;
+            contentResource.save(content, false, [])
+                .then(function () {})
+                .catch(function () {
+                    notificationsService.error('Error', 'Failed to update property value.');
+                });
 
-            umContentCreatorService.getProperties(contentTypeKey)
-                .then(function (response) {
-                    $scope.properties = response.data;
+            return false;
+        },
+        updatePropertyInBlockListItem: function (content, propertyAlias, propertyToUpdate, generatedText) {
+            propertyToUpdate[propertyAlias] = generatedText;
+
+            contentResource.save(content, false, [])
+                .then(function () {
+                    location.reload();
                 })
                 .catch(function () {
-                    notificationsService.error('Error', 'Failed to load properties.');
+                    notificationsService.error('Error', 'Failed to update property value.');
                 });
-        };
 
-        $scope.getTemperatureLabel = function (temperatureValue) {
-            return $scope.configurationObject.temperatureLabels[temperatureValue];
-        };
-
-        $scope.generate = function () {
-            if (!$scope.configurationObject.selectedProperty || !$scope.configurationObject.prompt) {
-                return;
-            }
-
-            const { content, properties } = umContentCreatorService.getPropertiesAndContent(editorState);
-
-            const propertyToUpdate = umContentCreatorService.findProperty(properties, $scope.configurationObject.selectedProperty.propertyAlias);
-
-            if (!propertyToUpdate) {
-                notificationsService.error('Error', 'Failed to find the property to update.');
-                return;
-            }
-
-            $scope.configurationObject.isGenerating = true;
-
-            umContentCreatorService.getGeneratedText({
-                prompt: $scope.configurationObject.prompt,
-                maxTokens: $scope.configurationObject.selectedTokens,
-                temperature: $scope.configurationObject.selectedTemperature,
-                propertyEditorAlias: $scope.configurationObject.selectedProperty.propertyEditorAlias
-            }).then(function (response) {
-                const generatedText = response.data;
-                const selectedPropertyAlias = $scope.configurationObject.selectedProperty.propertyAlias;
-                switch (propertyToUpdate.editor) {
-                    case "Umbraco.NestedContent": {
-                        $scope.configurationObject.isGenerating = umContentCreatorService.updatePropertyInNestedContent(content, selectedPropertyAlias, generatedText);
-                        break;
-                    }
-                    case "Umbraco.BlockList": {
-                        $scope.configurationObject.isGenerating = umContentCreatorService.updatePropertyInBlockListItem(content, selectedPropertyAlias, propertyToUpdate, generatedText);
-                        break;
-                    }
-                    default: {
-                        $scope.configurationObject.isGenerating = umContentCreatorService.updatePropertyInContent(propertyToUpdate, generatedText, content);
-                        break;
-                    }
-                }
+            return false;
+        },
+        updatePropertyInNestedContent: function (content, propertyAlias, generatedText) {
+            this.updateNestedContentProperty({
+                contentId: content.id,
+                propertyAlias: propertyAlias,
+                value: generatedText
+            }).then(function () {
+                location.reload();
             }).catch(function () {
-                notificationsService.error('Error', 'Failed to update property value.');
+                notificationsService.error('Error', 'Failed to update nested property value.');
             });
-        };
 
-        $scope.init();
-    });
+            return false;
+        }
+    };
+});

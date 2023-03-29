@@ -2,7 +2,7 @@
     function ($scope, $http, $routeParams, contentResource, notificationsService, editorState, umContentCreatorService) {
         $scope.configurationObject = umContentCreatorService.getInitialValues();
         $scope.properties = [];
-
+        
         $scope.init = function () {
             if ($routeParams.section === 'content' && !!$routeParams.create || $routeParams.section === 'settings') {
                 return;
@@ -10,13 +10,13 @@
 
             const { content, properties } = umContentCreatorService.getPropertiesAndContent(editorState);
             let contentTypeKey = content.contentTypeKey;
-            let activeBlockListItem = umContentCreatorService.getActiveBlockListItem(properties);
+            const  activeBlockListItem = umContentCreatorService.getActiveBlockListItem(properties);
 
             if (activeBlockListItem) {
                 contentTypeKey = activeBlockListItem.data.contentTypeKey;
             }
 
-            umContentCreatorService.getProperties(contentTypeKey)
+            umContentCreatorService.getProperties(contentTypeKey, content.id)
                 .then(function (response) {
                     $scope.properties = response.data;
                 })
@@ -44,7 +44,7 @@
             }
 
             $scope.configurationObject.isGenerating = true;
-
+    
             umContentCreatorService.getGeneratedText({
                 prompt: $scope.configurationObject.prompt,
                 maxTokens: $scope.configurationObject.selectedTokens,
@@ -53,6 +53,7 @@
             }).then(function (response) {
                 const generatedText = response.data;
                 const selectedPropertyAlias = $scope.configurationObject.selectedProperty.propertyAlias;
+                
                 switch (propertyToUpdate.editor) {
                     case "Umbraco.NestedContent": {
                         $scope.configurationObject.isGenerating = umContentCreatorService.updatePropertyInNestedContent(content, selectedPropertyAlias, generatedText);
