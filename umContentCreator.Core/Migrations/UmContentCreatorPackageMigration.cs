@@ -6,9 +6,8 @@ using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Core.Strings;
 using Umbraco.Cms.Infrastructure.Migrations;
 using Umbraco.Cms.Infrastructure.Packaging;
-using umContentCreator.Core.Migrations;
 
-namespace umContentCreator.Core.Components;
+namespace umContentCreator.Core.Migrations;
 
 public class UmContentCreatorPackageMigration: PackageMigrationBase
 {

@@ -1,43 +1,56 @@
-﻿<div class="um-content-creator" ng-controller="UmContentCreatorController">
-    <img class="loading-container" src="/loading.gif" alt="Loading..." ng-show="configurationObject.isGenerating">
-    <div>
-        <label for="propertyDropdown">Select a property:</label>
-        <select id="propertyDropdown"
-                ng-model="configurationObject.selectedProperty"
-                ng-options="property as property.propertyName for property in properties">
-            <option value="">-- Not selected --</option>
-        </select>
-    </div>
+﻿<div ng-controller="UmContentCreatorController">
+    <button ng-click="openModal($event)" id="openModalButton" class="open-modal">Create Content</button>
+    <div id="myModal" class="um-content-creator-modal">
+        <div class="um-content-creator-modal-content">
+            <div class="close-modal">
+                <span ng-click="closeModal()">&times;</span>
+            </div>
+            <div class="um-content-creator">
+                <img class="loading-container" src="/loading.gif" alt="Loading..." ng-show="configurationObject.isGenerating">
+                <div class="content">
+                    <div>
+                        <label for="propertyDropdown">Select a property:</label>
+                        <select id="propertyDropdown"
+                                ng-model="configurationObject.selectedProperty"
+                                ng-options="property as property.propertyName for property in properties">
+                            <option value="">-- Not selected --</option>
+                        </select>
+                    </div>
 
-    <div>
-        <label for="tokensSlider">Max words per response:</label>
-        <input type="range"
-               id="tokensSlider"
-               min="50"
-               max="2048"
-               ng-model="configurationObject.selectedTokens"
-               step="1">
-        <span>{{configurationObject.selectedTokens}}</span>
-    </div>
+                    <div>
+                        <label for="tokensSlider">Max words per response:</label>
+                        <input type="range"
+                               id="tokensSlider"
+                               min="50"
+                               max="2048"
+                               ng-model="configurationObject.selectedTokens"
+                               step="1">
+                        <span>{{configurationObject.selectedTokens}}</span>
+                    </div>
 
-    <div>
-        <label for="temperatureSlider">Model behaviour:</label>
-        <input type="range"
-               id="temperatureSlider"
-               min="0.2"
-               max="1.0"
-               ng-model="configurationObject.selectedTemperature"
-               step="0.2">
-        <span class="temperature-hint">{{getTemperatureLabel(configurationObject.selectedTemperature)}}</span>
-    </div>
+                    <div>
+                        <label for="temperatureSlider">Model behaviour:</label>
+                        <input type="range"
+                               id="temperatureSlider"
+                               min="0.2"
+                               max="1.0"
+                               ng-model="configurationObject.selectedTemperature"
+                               step="0.2">
+                        <span class="temperature-hint">{{getTemperatureLabel(configurationObject.selectedTemperature)}}</span>
+                    </div>
 
-    <div>
-        <label for="promptTextarea">What would you like to generate?</label>
-        <textarea id="promptTextarea"
-                  ng-model="configurationObject.prompt" rows="3" placeholder="Enter a prompt..."></textarea>
-    </div>
+                    <div>
+                        <label for="promptTextarea">What would you like to generate?</label>
+                        <textarea id="promptTextarea"
+                                  ng-model="configurationObject.prompt" rows="3" placeholder="Enter a prompt..."></textarea>
+                    </div>
 
-    <div>
-        <button ng-click="generate()">Generate</button>
+                    <div>
+                        <button ng-click="generate($event)" ng-disabled="!configurationObject.selectedProperty || !configurationObject.prompt">Generate</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+

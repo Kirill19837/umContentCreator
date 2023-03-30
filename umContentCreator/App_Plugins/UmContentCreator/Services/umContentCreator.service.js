@@ -70,13 +70,14 @@
 
                     const activeContentUdi = activeContent?.data?.udi;
                     const contentData = value?.contentData?.find(data => data?.udi === activeContentUdi);
-
+                    
                     if (!contentData) {
                         continue;
                     }
                     
                     if (property.editor === blockGridAlias) {
                         contentData.editor = blockGridAlias;
+                        return contentData;
                     }
                     
                     contentData.editor = blockListAlias;
@@ -111,11 +112,7 @@
             propertyToUpdate[propertyAlias] = generatedText;
 
             contentResource.save(content, false, [])
-                .then(function () {
-                    if (propertyToUpdate.editor === blockListAlias) {
-                        location.reload();
-                    }
-                })
+                .then(function () {})
                 .catch(function () {
                     notificationsService.error('Error', 'Failed to update property value.');
                 });

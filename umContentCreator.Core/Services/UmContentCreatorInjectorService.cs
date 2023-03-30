@@ -40,36 +40,52 @@ public class UmContentCreatorInjectorService : IUmContentCreatorInjectorService
         return contentTypesAndAncestors;
     }
 
-   public void AddUmContentCreatorToExistingContentTypes(IEnumerable<IContentType> contentTypes)
-{
-    const string propertyEditorAlias = "umContentCreator";
-    const string propertyName = "Content Creator";
-    const string propertyTabName = "Content Creator";
-
-    var dataType = GetDataType(propertyEditorAlias);
-    var contentTypesAndAncestors = GetAllContentTypesAndAncestors(contentTypes);
-    
-    foreach (var contentType in contentTypes)
+    public void AddUmContentCreatorToExistingContentTypes(IEnumerable<IContentType> contentTypes)
     {
-        if (!CheckIfContentCanBeUpdated(contentType, contentTypesAndAncestors, propertyEditorAlias)
-            && !CheckIfNestedContentHasTextProperties(contentTypes, contentType))
+        const string propertyEditorAliasPrefix = "umContentCreator-";
+
+        var dataType = GetDataType(propertyEditorAliasPrefix[..^1]);
+        var contentTypesAndAncestors = GetAllContentTypesAndAncestors(contentTypes);
+
+        foreach (var contentType in contentTypes)
         {
-            continue;
+            // if (!CheckIfContentCanBeUpdated(contentType, contentTypesAndAncestors, propertyEditorAliasPrefix)
+            //     && !CheckIfNestedContentHasTextProperties(contentTypes, contentType))
+            // {
+            //     continue;
+            // }
+
+            var newContentCreatorProperties = new List<(PropertyType PropertyType, string OriginalPropertyAlias)>();
+            var sortedPropertyTypes = new List<IPropertyType>();
+
+            foreach (var propertyType in contentType.CompositionPropertyTypes)
+            {
+                if (propertyType.PropertyEditorAlias is not (TinyMce or TextArea or TextBox)) continue;
+                var contentCreatorPropertyAlias = propertyEditorAliasPrefix + propertyType.Alias;
+                if (contentType.PropertyTypeExists(contentCreatorPropertyAlias)) continue;
+                var contentCreatorPropertyType =
+                    new PropertyType(_shortStringHelper, dataType, contentCreatorPropertyAlias)
+                    {
+                        Name = propertyType.Name + " Content Creator",
+                        Description = "Automatically added Content Creator property",
+                        Mandatory = false
+                    };
+
+                sortedPropertyTypes.Add(propertyType);
+                newContentCreatorProperties.Add((contentCreatorPropertyType, propertyType.Alias));
+
+                var customControl =
+                    newContentCreatorProperties.FirstOrDefault(x => x.PropertyType.Alias == propertyType.Alias);
+                if (customControl != default) sortedPropertyTypes.Add(customControl.PropertyType);
+            }
+
+            contentType.CompositionPropertyTypes.ToList().Clear();
+            contentType.CompositionPropertyTypes.ToList().AddRange(sortedPropertyTypes);
         }
-
-        var contentCreatorPropertyGroup = GetContentCreatorPropertyGroup(contentType, propertyTabName);
-        var contentCreatorPropertyType = new PropertyType(_shortStringHelper, dataType, propertyEditorAlias)
-        {
-            Name = propertyName,
-            Description = "Automatically added Content Creator property",
-            Mandatory = false
-        };
-
-        contentCreatorPropertyGroup.PropertyTypes?.Add(contentCreatorPropertyType);
     }
-}
 
-   private static bool CheckIfContentCanBeUpdated(IContentTypeBase contentType, IReadOnlyDictionary<string, List<IContentType>> contentTypesAndAncestors,
+
+    private static bool CheckIfContentCanBeUpdated(IContentTypeBase contentType, IReadOnlyDictionary<string, List<IContentType>> contentTypesAndAncestors,
        string propertyEditorAlias)
    {
        var hasTextProperties =
