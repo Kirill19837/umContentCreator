@@ -9,6 +9,7 @@ using Umbraco.Extensions;
 using umContentCreator.Core.Interfaces;
 using umContentCreator.Core.PropertyEditors;
 using static Umbraco.Cms.Core.Constants.PropertyEditors.Aliases;
+using IPropertyType = Umbraco.Cms.Core.Models.IPropertyType;
 
 namespace umContentCreator.Core.Services;
 
@@ -42,9 +43,9 @@ public class UmContentCreatorInjectorService : IUmContentCreatorInjectorService
 
     public void AddUmContentCreatorToExistingContentTypes(IEnumerable<IContentType> contentTypes)
     {
-        const string propertyEditorAliasPrefix = "umContentCreator-";
+        const string propertyEditorAlias = "umContentCreator";
 
-        var dataType = GetDataType(propertyEditorAliasPrefix[..^1]);
+        var dataType = GetDataType(propertyEditorAlias);
         var contentTypesAndAncestors = GetAllContentTypesAndAncestors(contentTypes);
 
         foreach (var contentType in contentTypes)
@@ -55,14 +56,21 @@ public class UmContentCreatorInjectorService : IUmContentCreatorInjectorService
             //     continue;
             // }
 
-            var newContentCreatorProperties = new List<(PropertyType PropertyType, string OriginalPropertyAlias)>();
-            var sortedPropertyTypes = new List<IPropertyType>();
+            var contentCreatorPropertyTypes = new List<(IPropertyType propertyType, IPropertyType targetPropertyType)>();
 
             foreach (var propertyType in contentType.CompositionPropertyTypes)
             {
-                if (propertyType.PropertyEditorAlias is not (TinyMce or TextArea or TextBox)) continue;
-                var contentCreatorPropertyAlias = propertyEditorAliasPrefix + propertyType.Alias;
-                if (contentType.PropertyTypeExists(contentCreatorPropertyAlias)) continue;
+                if (propertyType.PropertyEditorAlias is not (TinyMce or TextArea or TextBox))
+                {
+                    continue;
+                }
+                var contentCreatorPropertyAlias = $"{propertyEditorAlias}__{propertyType.Alias}__{propertyType.PropertyEditorAlias}";
+
+                if (contentType.PropertyTypeExists(contentCreatorPropertyAlias))
+                {
+                    continue;
+                }
+                
                 var contentCreatorPropertyType =
                     new PropertyType(_shortStringHelper, dataType, contentCreatorPropertyAlias)
                     {
@@ -71,16 +79,16 @@ public class UmContentCreatorInjectorService : IUmContentCreatorInjectorService
                         Mandatory = false
                     };
 
-                sortedPropertyTypes.Add(propertyType);
-                newContentCreatorProperties.Add((contentCreatorPropertyType, propertyType.Alias));
-
-                var customControl =
-                    newContentCreatorProperties.FirstOrDefault(x => x.PropertyType.Alias == propertyType.Alias);
-                if (customControl != default) sortedPropertyTypes.Add(customControl.PropertyType);
+                contentCreatorPropertyTypes.Add((contentCreatorPropertyType, propertyType));
             }
 
-            contentType.CompositionPropertyTypes.ToList().Clear();
-            contentType.CompositionPropertyTypes.ToList().AddRange(sortedPropertyTypes);
+            foreach (var (propertyType, targetPropertyType) in contentCreatorPropertyTypes)
+            {
+                var propertyGroup =
+                    contentType.CompositionPropertyGroups.FirstOrDefault(pg => pg.PropertyTypes.Contains(targetPropertyType));
+                
+                propertyGroup?.PropertyTypes?.Add(propertyType);
+            }
         }
     }
 
@@ -156,25 +164,5 @@ public class UmContentCreatorInjectorService : IUmContentCreatorInjectorService
         _dataTypeService.Save(dataType);
 
         return dataType;
-    }
-    
-    private PropertyGroup GetContentCreatorPropertyGroup(IContentTypeBase contentType, string propertyTabName)
-    {
-        var contentCreatorPropertyGroup = contentType.PropertyGroups.FirstOrDefault(x => x.Name == propertyTabName);
-
-        if (contentCreatorPropertyGroup != null)
-        {
-            return contentCreatorPropertyGroup;
-        }
-        
-        contentCreatorPropertyGroup = new PropertyGroup(new PropertyTypeCollection(true))
-        {
-            Name = propertyTabName,
-            Alias = propertyTabName.ToSafeAlias(_shortStringHelper),
-            SortOrder = 9999
-        };
-        contentType.PropertyGroups.Add(contentCreatorPropertyGroup);
-
-        return contentCreatorPropertyGroup;
     }
 }

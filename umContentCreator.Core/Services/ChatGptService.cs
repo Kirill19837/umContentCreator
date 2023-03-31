@@ -44,7 +44,7 @@ public class ChatGptService : IChatGptService
         var responseObject = JsonConvert.DeserializeObject<dynamic>(responseContent);
         var returnedText = responseObject.choices[0].text.ToString();
 
-        if (model.PropertyEditorAlias is TinyMce)
+        if (model.PropertyEditorAlias == TinyMce.Replace(".", ""))
         {
             return new Markdown().Transform(returnedText);
         }

@@ -1,31 +1,21 @@
 ﻿<div ng-controller="UmContentCreatorController">
     <button ng-click="openModal($event)" id="openModalButton" class="open-modal">Create Content</button>
-    <div id="myModal" class="um-content-creator-modal">
+    <div id="um-content-creator-modal" class="um-content-creator-modal">
         <div class="um-content-creator-modal-content">
             <div class="close-modal">
                 <span ng-click="closeModal()">&times;</span>
             </div>
             <div class="um-content-creator">
-                <img class="loading-container" src="/loading.gif" alt="Loading..." ng-show="configurationObject.isGenerating">
                 <div class="content">
-                    <div>
-                        <label for="propertyDropdown">Select a property:</label>
-                        <select id="propertyDropdown"
-                                ng-model="configurationObject.selectedProperty"
-                                ng-options="property as property.propertyName for property in properties">
-                            <option value="">-- Not selected --</option>
-                        </select>
-                    </div>
-
                     <div>
                         <label for="tokensSlider">Max words per response:</label>
                         <input type="range"
                                id="tokensSlider"
                                min="50"
                                max="2048"
-                               ng-model="configurationObject.selectedTokens"
+                               ng-model="configurationObject.generationModel.maxTokens"
                                step="1">
-                        <span>{{configurationObject.selectedTokens}}</span>
+                        <span>{{configurationObject.generationModel.maxTokens}}</span>
                     </div>
 
                     <div>
@@ -34,19 +24,34 @@
                                id="temperatureSlider"
                                min="0.2"
                                max="1.0"
-                               ng-model="configurationObject.selectedTemperature"
+                               ng-model="configurationObject.generationModel.temperature"
                                step="0.2">
-                        <span class="temperature-hint">{{getTemperatureLabel(configurationObject.selectedTemperature)}}</span>
+                        <span class="temperature-hint">{{getTemperatureLabel(configurationObject.generationModel.temperature)}}</span>
                     </div>
 
                     <div>
                         <label for="promptTextarea">What would you like to generate?</label>
                         <textarea id="promptTextarea"
-                                  ng-model="configurationObject.prompt" rows="3" placeholder="Enter a prompt..."></textarea>
+                                  ng-model="configurationObject.generationModel.prompt" rows="3" placeholder="Enter a prompt..."></textarea>
                     </div>
 
-                    <div>
-                        <button ng-click="generate($event)" ng-disabled="!configurationObject.selectedProperty || !configurationObject.prompt">Generate</button>
+                    <div class="loading-container" ng-show="configurationObject.isGenerating">
+                        <p>Generating</p><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+                    </div>
+                    
+                    <div ng-show="configurationObject.generatedText" class="generated-text">
+                        <label for="generatedText">Generated text:</label>
+                        <textarea id="generatedText"
+                                  ng-model="configurationObject.generatedText" rows="3"></textarea>
+                    </div>
+
+                    <div class="um-content-creator-buttons">
+                        <button ng-click="generateText($event)" ng-disabled="!configurationObject.generationModel.prompt">Generate</button>
+                        
+                        <div class="buttons-right" ng-show="configurationObject.generatedText">
+                            <button ng-click="updateContentOfProperty($event)" ng-disabled="!configurationObject.generatedText">Confirm</button>
+                            <button  class="discard" ng-click="resetSettings($event)">Discard</button>
+                        </div>
                     </div>
                 </div>
             </div>
