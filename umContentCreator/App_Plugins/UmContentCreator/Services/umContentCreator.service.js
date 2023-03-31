@@ -27,15 +27,6 @@
             configuration = JSON.parse(JSON.stringify(defaultConfiguration));
             return configuration;
         },
-        getProperties: function (contentTypeKey, contentId) {
-            return $http.get("/umbraco/api/UmContentCreator/GetProperties", {
-                params: 
-                    {
-                        contentTypeKey: contentTypeKey,
-                        contentId: contentId
-                    }
-            });
-        },
         generateText: function () {
             configuration.isGenerating = true;
             
