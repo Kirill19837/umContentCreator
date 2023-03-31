@@ -30,10 +30,6 @@
 		
 	</ItemGroup>
 
-	<ItemGroup>
-		<None Include="loading.gif" Pack="true" PackPath="\" />
-	</ItemGroup>
-
 
 	<ItemGroup>
 	  <ProjectReference Include="..\umContentCreator.Core\umContentCreator.Core.csproj" />

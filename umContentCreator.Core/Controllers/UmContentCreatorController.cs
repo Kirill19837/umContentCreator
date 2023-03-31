@@ -22,12 +22,6 @@ public class UmContentCreatorController : UmbracoApiController
         return Ok(await _chatGptService.GenerateTextAsync(model));
     }
 
-    [HttpGet]
-    public IActionResult GetProperties([FromQuery] string contentTypeKey, int contentId)
-    {
-        return Ok(_propertiesService.GetPropertiesOfContent(contentTypeKey, contentId));
-    }
-
     [HttpPost]
     public IActionResult UpdateNestedContentProperty([FromBody] UpdatePropertyModel model)
     {

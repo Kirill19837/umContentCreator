@@ -40,15 +40,21 @@ public class ChatGptService : IChatGptService
         {
             throw new Exception("Failed to generate text from ChatGPT API.");
         }
-        var responseContent = await response.Content.ReadAsStringAsync();
-        var responseObject = JsonConvert.DeserializeObject<dynamic>(responseContent);
-        var returnedText = responseObject.choices[0].text.ToString();
+        var returnedText = await GetGeneratedText(response);
 
         if (model.PropertyEditorAlias == TinyMce.Replace(".", ""))
         {
             return new Markdown().Transform(returnedText);
         }
 
+        return returnedText;
+    }
+
+    private static async Task<dynamic> GetGeneratedText(HttpResponseMessage response)
+    {
+        var responseContent = await response.Content.ReadAsStringAsync();
+        var responseObject = JsonConvert.DeserializeObject<dynamic>(responseContent);
+        var returnedText = responseObject.choices[0].text.ToString();
         return returnedText;
     }
 }
