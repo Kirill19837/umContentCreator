@@ -1,7 +1,7 @@
 ﻿<div ng-controller="UmContentCreatorController">
     <button ng-click="openModal($event)" id="openModalButton" class="open-modal">Create Content</button>
     <div id="um-content-creator-modal" class="um-content-creator-modal">
-        <div class="um-content-creator-modal-content">
+        <div id="um-content-creator-modal-content" class="um-content-creator-modal-content">
             <div class="close-modal">
                 <span ng-click="closeModal()">&times;</span>
             </div>
@@ -30,8 +30,8 @@
                     </div>
 
                     <div>
-                        <label for="promptTextarea">What would you like to generate?</label>
-                        <textarea id="promptTextarea"
+                        <label for="promptTextArea">What would you like to generate?</label>
+                        <textarea id="promptTextArea"
                                   ng-model="configurationObject.generationModel.prompt" rows="3" placeholder="Enter a prompt..."></textarea>
                     </div>
 
@@ -46,7 +46,7 @@
                     </div>
 
                     <div class="um-content-creator-buttons">
-                        <button ng-click="generateText($event)" ng-disabled="!configurationObject.generationModel.prompt">Generate</button>
+                        <button ng-click="generateText($event)" ng-disabled="!configurationObject.generationModel.prompt || configurationObject.isGenerating">Generate</button>
                         
                         <div class="buttons-right" ng-show="configurationObject.generatedText">
                             <button ng-click="updateContentOfProperty($event)" ng-disabled="!configurationObject.generatedText">Confirm</button>

@@ -90,6 +90,7 @@
 }
 
 .um-content-creator-modal-content {
+    display: none;
     background-color: #fefefe;
     margin: 8% auto;
     padding: 20px;
