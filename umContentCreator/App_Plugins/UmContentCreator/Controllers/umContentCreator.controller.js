@@ -1,15 +1,31 @@
-﻿angular.module('umbraco').controller('UmContentCreatorController',
-    function ($scope, $http, $routeParams, $timeout, editorState, umContentCreatorService) {
-        const modal = document.getElementById("um-content-creator-modal");
-        const modalContent = document.getElementById("um-content-creator-modal-content");
-        const navigation = document.getElementById("navigation");
-        $scope.configurationObject = umContentCreatorService.getInitialValues();
+﻿angular.module('umbraco').directive('uniqueId', function () {
+    let idCounter = 0;
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            idCounter += 1;
+            element.attr('unique-Id', idCounter);
+        },
+    };
+});
 
+angular.module('umbraco').controller('UmContentCreatorController',
+    function ($scope, $http, $routeParams, $timeout, editorState, umContentCreatorService, notificationsService) {
+        $scope.configurationObject = umContentCreatorService.getInitialValues();
+        const navigation = document.getElementById("navigation");
+        let modal;
+        let modalContent;
+        
         $scope.openModal = (event) => {
             event.stopPropagation();
             event.preventDefault();
 
             umContentCreatorService.setSelectedProperty(event);
+
+            const button = event.target;
+            const uniqueId = button.getAttribute('unique-id');
+            modal = document.getElementById('myModal' + uniqueId);
+            modalContent = document.getElementById('myModalContent' + uniqueId);
 
             navigation.classList.add("ng-hide");
             modal.style.display = "block";
@@ -62,9 +78,7 @@
                 return;
             }
 
-            console.log($scope.configurationObject);
             $scope.configurationObject = umContentCreatorService.getGeneratedText($scope.configurationObject.generationModel);
-            console.log($scope.configurationObject);
         };
         
         $scope.updateContentOfProperty = (event) =>  {
@@ -75,10 +89,9 @@
                 .then(function () {
                     $scope.closeModal();
                     $scope.configurationObject = umContentCreatorService.getInitialValues();
-                    // Trigger a digest cycle to update the view
-                    $timeout(angular.noop);
                 })
                 .catch(function (error) {
+                    notificationsService.error(error);
                 });
         }
         

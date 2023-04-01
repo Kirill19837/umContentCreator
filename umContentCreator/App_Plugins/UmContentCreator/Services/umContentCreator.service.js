@@ -1,7 +1,20 @@
 ﻿angular.module('umbraco').factory('umContentCreatorService',
-    function ($http, contentResource, notificationsService, $timeout) {
+    function ($http, contentResource, notificationsService, $document) {
         const blockListAlias = 'Umbraco.BlockList';
         const blockGridAlias = 'Umbraco.BlockGrid';
+        function findNestedProperty(obj, propertyAlias) {
+            for (const key in obj) {
+                if (key === propertyAlias) {
+                    return obj;
+                } else if (typeof obj[key] === 'object') {
+                    const result = findNestedProperty(obj[key], propertyAlias);
+                    if (result) {
+                        return result;
+                    }
+                }
+            }
+            return null;
+        }
         const defaultConfiguration = {
             generationModel: {
                 prompt: '',
@@ -73,8 +86,6 @@
                         reject('Failed to find the property to update.');
                         return;
                     }
-
-                    debugger
                     switch (propertyToUpdate.editor) {
                         case "Umbraco.NestedContent": {
                             propertyToUpdate[configuration.selectedPropertyAlias] = configuration.generatedText;
@@ -96,6 +107,14 @@
 
                     contentResource.save(content, false, [])
                         .then(function () {
+                            const propertyAlias = configuration.selectedPropertyAlias;
+                            const targetElementFromNestedContent = angular.element($document[0].querySelector(`input[id$="___${propertyAlias}"], textarea[id$="___${propertyAlias}"]`));
+                            const targetElementFromBlockListContent = angular.element($document[0].querySelector(`input[id$="${propertyAlias}"], textarea[id$="${propertyAlias}"]`));
+                            const targetElement = targetElementFromNestedContent.length ? targetElementFromNestedContent : targetElementFromBlockListContent;
+                            if (targetElement.length) {
+                                targetElement.val(configuration.generatedText);
+                                targetElement.triggerHandler('input');
+                            }
                             resolve();
                         })
                         .catch(function () {
@@ -129,12 +148,17 @@
                     }
                     if (property.editor === "Umbraco.NestedContent") {
                         const nestedItems = property.value;
-
+                        let foundProperty;
+                        
+                        debugger
                         for (const nestedItem of nestedItems) {
-                            
+                            foundProperty = findNestedProperty(nestedItem, configuration.selectedPropertyAlias);
+                            if (foundProperty) {
+                                break;
+                            }
                         }
                         
-                        const nested = property.value.find(p => p.hasOwnProperty(configuration.selectedPropertyAlias.toString()));
+                        const nested = property.value.find(p => p.hasOwnProperty(configuration.selectedPropertyAlias.toString())) ?? foundProperty;
                         
                         if (!nested) {
                             continue;

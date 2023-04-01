@@ -1,8 +1,8 @@
 ﻿<div ng-controller="UmContentCreatorController">
-    <button ng-click="openModal($event)" id="openModalButton" class="open-modal">Create Content</button>
-    <div id="um-content-creator-modal" class="um-content-creator-modal">
-        <div id="um-content-creator-modal-content" class="um-content-creator-modal-content">
-            <div class="close-modal">
+    <button ng-click="openModal($event)" id="openModalButton" class="open-modal" unique-id="{{$id}}">Create Content</button>
+    <div id="{{'myModal' + $id}}" class="um-content-creator-modal">
+        <div id="{{'myModalContent' + $id}}" class="um-content-creator-modal-content">
+        <div class="close-modal">
                 <span ng-click="closeModal()">&times;</span>
             </div>
             <div class="um-content-creator">
