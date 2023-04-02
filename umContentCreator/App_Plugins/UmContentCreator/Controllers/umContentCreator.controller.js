@@ -20,8 +20,10 @@ angular.module('umbraco').controller('UmContentCreatorController',
             event.stopPropagation();
             event.preventDefault();
             
-            umContentCreatorService.setSelectedProperty(event);
-
+            umContentCreatorService.setSelectedProperty(event, editorState);
+            $scope.configurationObject.userAcceptedOverride = false;
+            $scope.configurationObject.propertyHasValue = umContentCreatorService.checkIfPropertyHasValue();
+            
             const button = event.target;
             const uniqueId = button.getAttribute('unique-id');
             modal = document.getElementById('myModal' + uniqueId);

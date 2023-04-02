@@ -95,7 +95,7 @@
     margin: 8% auto;
     padding: 20px;
     border: 1px solid #888;
-    max-width: 50%;
+    max-width: 450px;
     border-radius: 10px;
 }
 
@@ -231,4 +231,26 @@
     40% {
         opacity: 1;
     }
+}
+
+.override-container {
+    margin-bottom: 8px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.override-container p {
+    margin: 0;
+}
+
+.override-container input {
+    transform: scale(1.5);
+}
+
+.override-warning {
+    color: #d63939;
+    font-size: 15px;
+    font-weight: bold;
 }

@@ -32,21 +32,28 @@
                     <div>
                         <label for="promptTextArea">What would you like to generate?</label>
                         <textarea id="promptTextArea"
-                                  ng-model="configurationObject.generationModel.prompt" rows="3" placeholder="Enter a prompt..."></textarea>
+                                  ng-model="configurationObject.generationModel.prompt"
+                                  rows="3" placeholder="Enter a prompt..."></textarea>
                     </div>
 
+                    <div ng-show="configurationObject.propertyHasValue && !configurationObject.userAcceptedOverride" class="override-container">
+                        <p class="override-warning">The property already has a value. Confirm to override it.</p>
+                        <input type="checkbox" ng-model="configurationObject.userAcceptedOverride" id="acceptOverride">
+                    </div>
+                    
                     <div class="loading-container" ng-show="configurationObject.isGenerating">
                         <p>Generating</p><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
                     </div>
                     
-                    <div ng-show="configurationObject.generatedText" class="generated-text">
+                    <div ng-show="configurationObject.generatedText && !configurationObject.isGenerating" class="generated-text">
                         <label for="generatedText">Generated text:</label>
                         <textarea id="generatedText"
                                   ng-model="configurationObject.generatedText" rows="3"></textarea>
                     </div>
 
                     <div class="um-content-creator-buttons">
-                        <button ng-click="generateText($event)" ng-disabled="!configurationObject.generationModel.prompt || configurationObject.isGenerating">Generate</button>
+                        <button ng-click="generateText($event)" 
+                                ng-disabled="!configurationObject.generationModel.prompt || configurationObject.isGenerating || !configurationObject.userAcceptedOverride">Generate</button>
                         
                         <div class="buttons-right" ng-show="configurationObject.generatedText">
                             <button ng-click="updateContentOfProperty($event)" ng-disabled="!configurationObject.generatedText">Confirm</button>

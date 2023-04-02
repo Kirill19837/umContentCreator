@@ -2,19 +2,7 @@
     function ($http, contentResource, notificationsService, $document) {
         const blockListAlias = 'Umbraco.BlockList';
         const blockGridAlias = 'Umbraco.BlockGrid';
-        function findNestedProperty(obj, propertyAlias) {
-            for (const key in obj) {
-                if (key === propertyAlias) {
-                    return obj;
-                } else if (typeof obj[key] === 'object') {
-                    const result = findNestedProperty(obj[key], propertyAlias);
-                    if (result) {
-                        return result;
-                    }
-                }
-            }
-            return null;
-        }
+
         const defaultConfiguration = {
             generationModel: {
                 prompt: '',
@@ -29,8 +17,11 @@
                 1.0: 'Adventurous'
             },
             selectedPropertyAlias: null,
+            nestedPropertyPath: [],
             isGenerating: false,
-            generatedText: ''
+            generatedText: '',
+            content: null,
+            propertyToUpdate: null
         };
         
         let configuration;
@@ -39,6 +30,10 @@
             getInitialValues: function () {
                 configuration = JSON.parse(JSON.stringify(defaultConfiguration));
                 return configuration;
+            },
+            checkIfPropertyHasValue: function () {
+                const value = configuration.propertyToUpdate?.value ?? configuration.propertyToUpdate[configuration.selectedPropertyAlias];
+                return value !== null && value.length !== 0;
             },
             getGeneratedText: function (generationModel) {
                 configuration.isGenerating = true;
@@ -57,18 +52,36 @@
                 
                 return configuration;
             },
-            getActiveContent: function (property) {
-                const value = property.value;
-                const blockListItems = value.layout[blockListAlias];
-                const blockGridItems = value.layout[blockGridAlias];
-                const items = (blockListItems ?? blockGridItems);
-                const activeBlockListItem = items?.map(p => p.$block)?.find(i => i?.active === true);
-                const activeBlockListItemFromArea = items?.flatMap(p => p?.areas)
-                    ?.flatMap(i => i?.items)
-                    ?.map(p => p?.$block)
-                    ?.find(i => i?.active === true);
-                const activeContent = (activeBlockListItem ?? activeBlockListItemFromArea);
-                return {value, activeContent};
+            findNestedContentData: function (data, udi) {
+                if (data.udi === udi) {
+                    return data;
+                }
+
+                for (const key of Object.keys(data)) {
+                    if (data[key].hasOwnProperty('contentData')) {
+                        const result = this.findNestedContentDataInArray(data[key].contentData, udi);
+                        if (result) {
+                            return result;
+                        }
+                    }
+                }
+
+                return null;
+            },
+            findNestedContentDataInArray: function (contentDataArray, udi) {
+                for (const data of contentDataArray) {
+                    const result = this.findNestedContentData(data, udi);
+                    if (result) {
+                        return result;
+                    }
+                }
+                return null;
+            },
+            getActiveBlockItem: function (property) {
+                const contentData = property.value.contentData;
+                const udi = `umb://element/${configuration.selectedPropertyKey.replace(/-/g, "")}`;
+                const blockItem = this.findNestedContentDataInArray(contentData, udi);
+                return blockItem;
             },
             getPropertiesAndContent: function (editorState) {
                 const content = editorState.current;
@@ -77,11 +90,11 @@
                 
                 return {content, properties};
             }, 
-            updateContentOfProperty: function (editorState) {
+            updateContentOfProperty: function () {
                 return new Promise((resolve, reject) => {
-                    const {content, properties} = this.getPropertiesAndContent(editorState);
-                    const propertyToUpdate = this.findProperty(properties);
-
+                    const propertyToUpdate = configuration.propertyToUpdate;
+                    const content = configuration.content;
+                    
                     if (!propertyToUpdate) {
                         reject('Failed to find the property to update.');
                         return;
@@ -108,7 +121,7 @@
                     contentResource.save(content, false, [])
                         .then(function () {
                             const propertyAlias = configuration.selectedPropertyAlias;
-                            const targetElementFromNestedContent = angular.element($document[0].querySelector(`input[id$="___${propertyAlias}"], textarea[id$="___${propertyAlias}"]`));
+                            const targetElementFromNestedContent = angular.element($document[0].querySelector(`input[id$="${configuration.nestedItemDetails}"], textarea[id$="${configuration.nestedItemDetails}"]`));
                             const targetElementFromBlockListContent = angular.element($document[0].querySelector(`input[id$="${propertyAlias}"], textarea[id$="${propertyAlias}"]`));
                             const targetElement = targetElementFromNestedContent.length ? targetElementFromNestedContent : targetElementFromBlockListContent;
                             if (targetElement.length) {
@@ -129,56 +142,84 @@
                     }
     
                     if (property.editor === blockListAlias || property.editor === blockGridAlias) {
-                        const {value, activeContent} = this.getActiveContent(property);
-    
-                        const activeContentUdi = activeContent?.data?.udi;
-                        const contentData = value?.contentData?.find(data => data?.udi === activeContentUdi);
+                        const activeItem = this.getActiveBlockItem(property);
                         
-                        if (!contentData) {
+                        if (!activeItem) {
                             continue;
                         }
                         
                         if (property.editor === blockGridAlias) {
-                            contentData.editor = blockGridAlias;
-                            return contentData;
+                            activeItem.editor = blockGridAlias;
+                            return activeItem;
                         }
-                        
-                        contentData.editor = blockListAlias;
-                        return contentData;
+
+                        activeItem.editor = blockListAlias;
+                        return activeItem;
                     }
                     if (property.editor === "Umbraco.NestedContent") {
-                        const nestedItems = property.value;
-                        let foundProperty;
+                        const nestedPropertyPath = configuration.nestedItemDetails
+                            .replace(`___${configuration.selectedPropertyAlias}`, '')
+                            .split("___");
                         
-                        debugger
-                        for (const nestedItem of nestedItems) {
-                            foundProperty = findNestedProperty(nestedItem, configuration.selectedPropertyAlias);
-                            if (foundProperty) {
-                                break;
-                            }
-                        }
-                        
-                        const nested = property.value.find(p => p.hasOwnProperty(configuration.selectedPropertyAlias.toString())) ?? foundProperty;
-                        
-                        if (!nested) {
+                        if (property.alias !== nestedPropertyPath[0]) {
                             continue;
                         }
-                        
-                        nested.editor = "Umbraco.NestedContent";
-                        return nested;
+
+                        const findNestedProperty = (items, nestedPropertyPath) => {
+                            if (!items || !nestedPropertyPath) {
+                                return null;
+                            }
+
+                            if (nestedPropertyPath.length === 0) {
+                                for (const item of items) {
+                                    if (item.key === configuration.selectedPropertyKey) {
+                                        return item;
+                                    }
+                                }
+                                return null;
+                            }
+
+                            const currentPath = nestedPropertyPath.shift();
+                            for (const item of items) {
+                                if (item[currentPath]) {
+                                    if (nestedPropertyPath.length === 0) {
+                                        if (item[currentPath].key === configuration.selectedPropertyKey) {
+                                            return item[currentPath];
+                                        } else if (Array.isArray(item[currentPath]) && item[currentPath].some(p => p.key === configuration.selectedPropertyKey)) {
+                                            return item[currentPath].find(p => p.key === configuration.selectedPropertyKey);
+                                        }
+                                    } else {
+                                        const result = findNestedProperty(item[currentPath], [...nestedPropertyPath]);
+                                        if (result) {
+                                            return result;
+                                        }
+                                    }
+                                }
+                            }
+
+                            return null;
+                        };
+
+                        const foundProperty = findNestedProperty(property.value, nestedPropertyPath.length > 1 ? nestedPropertyPath.slice(1) : []);
+                        if (foundProperty) {
+                            foundProperty.editor = "Umbraco.NestedContent";
+                            return foundProperty;
+                        }
                     }
+
                 }
                 return null;
             },
-            setSelectedProperty: function (event) {
-                debugger
+            setSelectedProperty: function (event, editorState) {
                 const targetElement = angular.element(event.target);
                 const propertyElement = targetElement.closest('umb-property');
                 const controllerElement = propertyElement.find('[ng-controller]').first();
                 const controllerName = controllerElement.attr('ng-controller').split(' ').pop();
                 
-                const dataElementValue = propertyElement.attr('data-element');
-                const selectedPropertyAlias = dataElementValue.split('-').pop();
+                const selectedPropertyKey = propertyElement.attr('element-key');
+                const dataElementValue = propertyElement.attr('data-element').split('-').pop();
+                const nestedItemDetails = dataElementValue.split('___');
+                const selectedPropertyAlias = nestedItemDetails.length === 1 ? dataElementValue : nestedItemDetails[nestedItemDetails.length - 1];
                 
                 let selectedPropertyEditorAlias = '';
                 
@@ -196,9 +237,17 @@
                         break;
                     }
                 }
-                
+
                 configuration.generationModel.propertyEditorAlias = selectedPropertyEditorAlias;
                 configuration.selectedPropertyAlias = selectedPropertyAlias;
+                configuration.nestedItemDetails = dataElementValue;
+                configuration.selectedPropertyKey = selectedPropertyKey;
+
+                const {content, properties} = this.getPropertiesAndContent(editorState);
+                const propertyToUpdate = this.findProperty(properties);
+
+                configuration.content = content;
+                configuration.propertyToUpdate = propertyToUpdate;
             }
         };
 });

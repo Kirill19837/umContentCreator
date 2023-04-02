@@ -37,5 +37,5 @@
     setInterval(() => {
         const propertyElements = document.querySelectorAll("umb-property");
         propertyElements.forEach(addContentCreator);
-    }, 1000);
+    }, 500);
 }]);
