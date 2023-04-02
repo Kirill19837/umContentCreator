@@ -2,7 +2,7 @@
     let idCounter = 0;
     return {
         restrict: 'A',
-        link: function (scope, element, attrs) {
+        link: function (scope, element) {
             idCounter += 1;
             element.attr('unique-Id', idCounter);
         },
@@ -19,7 +19,7 @@ angular.module('umbraco').controller('UmContentCreatorController',
         $scope.openModal = (event) => {
             event.stopPropagation();
             event.preventDefault();
-
+            
             umContentCreatorService.setSelectedProperty(event);
 
             const button = event.target;

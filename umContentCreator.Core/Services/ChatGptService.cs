@@ -42,7 +42,7 @@ public class ChatGptService : IChatGptService
         }
         var returnedText = await GetGeneratedText(response);
 
-        if (model.PropertyEditorAlias == TinyMce.Replace(".", ""))
+        if (model.PropertyEditorAlias is TinyMce)
         {
             return new Markdown().Transform(returnedText);
         }

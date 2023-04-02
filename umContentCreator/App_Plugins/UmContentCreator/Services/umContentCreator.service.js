@@ -171,12 +171,31 @@
                 return null;
             },
             setSelectedProperty: function (event) {
+                debugger
                 const targetElement = angular.element(event.target);
                 const propertyElement = targetElement.closest('umb-property');
+                const controllerElement = propertyElement.find('[ng-controller]').first();
+                const controllerName = controllerElement.attr('ng-controller').split(' ').pop();
+                
                 const dataElementValue = propertyElement.attr('data-element');
-                const splitValues = dataElementValue.split('__');
-                const selectedPropertyEditorAlias = splitValues.pop();
-                const selectedPropertyAlias = splitValues.pop();
+                const selectedPropertyAlias = dataElementValue.split('-').pop();
+                
+                let selectedPropertyEditorAlias = '';
+                
+                switch (controllerName) {
+                    case "Umbraco.PropertyEditors.textAreaController" : {
+                        selectedPropertyEditorAlias = "Umbraco.TextArea";
+                        break;
+                    }
+                    case "Umbraco.PropertyEditors.textboxController" : {
+                        selectedPropertyEditorAlias = "Umbraco.TextBox";
+                        break;
+                    }
+                    case "Umbraco.PropertyEditors.RTEController" : {
+                        selectedPropertyEditorAlias = "Umbraco.TinyMCE";
+                        break;
+                    }
+                }
                 
                 configuration.generationModel.propertyEditorAlias = selectedPropertyEditorAlias;
                 configuration.selectedPropertyAlias = selectedPropertyAlias;
