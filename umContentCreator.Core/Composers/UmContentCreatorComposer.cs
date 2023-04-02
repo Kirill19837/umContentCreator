@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.DependencyInjection;
-using Umbraco.Cms.Core.Notifications;
-using umContentCreator.Core.EventHandlers;
 using umContentCreator.Core.Interfaces;
 using umContentCreator.Core.Services;
 
@@ -12,9 +10,7 @@ public class UmContentCreatorComposer : IComposer
 {
     public void Compose(IUmbracoBuilder builder)
     {
-        builder.AddNotificationHandler<ContentTypeSavingNotification, ContentTypeEventsHandler>();
         builder.Services.AddTransient<ISettingsService, SettingsService>();
         builder.Services.AddTransient<IChatGptService, ChatGptService>();
-        builder.Services.AddTransient<IPropertiesService, PropertiesService>();
     }
 }
