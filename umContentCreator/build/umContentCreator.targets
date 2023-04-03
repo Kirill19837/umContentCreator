@@ -2,7 +2,6 @@
 
 	<PropertyGroup>
 		<UmContentCreatorFilesPath>$(MSBuildThisFileDirectory)..\App_Plugins\UmContentCreator\**\*.*</UmContentCreatorFilesPath>
-		<LoadingGifPath>$(MSBuildThisFileDirectory)..\loading.gif</LoadingGifPath>
 	</PropertyGroup>
 	
 	<Target Name="CopyUmContentCreatorFiles" BeforeTargets="Build">
@@ -15,19 +14,6 @@
 		<Copy 
 			SourceFiles="@(UmContentCreatorFiles)"
 			DestinationFiles="@(UmContentCreatorFiles->'$(MSBuildProjectDirectory)\App_Plugins\UmContentCreator\%(RecursiveDir)%(Filename)%(Extension)')"
-			SkipUnchangedFiles="true" />
-	</Target>
-
-	<Target Name="CopyLoadingGifFile" BeforeTargets="Build">
-		<ItemGroup>
-			<LoadingGifFile Include="$(LoadingGifPath)" />
-		</ItemGroup>
-
-		<Message Text="Copying loading gif file: $(LoadingGifPath) - #@(LoadingGifFile->Count()) files" Importance="high" />
-
-		<Copy
-			SourceFiles="@(LoadingGifFile)"
-			DestinationFiles="@(LoadingGifFile->'$(MSBuildProjectDirectory)\wwwroot\loading%(Extension)')"
 			SkipUnchangedFiles="true" />
 	</Target>
 

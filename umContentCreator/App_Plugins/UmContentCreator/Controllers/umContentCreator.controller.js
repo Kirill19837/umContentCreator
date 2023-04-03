@@ -78,7 +78,7 @@
             event.stopPropagation();
             event.preventDefault();
 
-            umContentCreatorService.updateContentOfProperty(editorState)
+            umContentCreatorService.updateContentOfProperty(replace)
                 .then(function () {
                     umContentCreatorService.updateContentInDOM(replace);
                     $scope.closeModal();
