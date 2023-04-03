@@ -11,6 +11,8 @@ namespace umContentCreator.Core.Services;
 public class ChatGptService : IChatGptService
 {
     private readonly HttpClient _httpClient;
+    private const string BaseApiUrl = "https://api.openai.com/v1/completions";
+    private const string Model = "text-davinci-003";
     private readonly ISettingsService _settingsService;
 
     public ChatGptService(ISettingsService settingsService)
@@ -27,14 +29,14 @@ public class ChatGptService : IChatGptService
 
         var requestBody = JsonConvert.SerializeObject(new
         {
-            model = settings.ChatGPTModel,
+            model = Model,
             prompt = model.Prompt,
             temperature = model.Temperature,
             max_tokens = model.MaxTokens
         });
 
         var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
-        var response = await _httpClient.PostAsync(settings.BaseApiUrl, content);
+        var response = await _httpClient.PostAsync(BaseApiUrl, content);
 
         if (!response.IsSuccessStatusCode)
         {
