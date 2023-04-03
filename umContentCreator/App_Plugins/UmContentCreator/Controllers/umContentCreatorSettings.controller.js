@@ -2,8 +2,22 @@
     function ($scope, $http, notificationsService) {
         const saveUrl = "/Umbraco/Api/Configuration/SaveSettings";
         const loadUrl = "/Umbraco/Api/Configuration/LoadSettings";
-        const modelsUrl = "/Umbraco/Api/Configuration/GetAvailableModels";
-        $scope.model = {};
+        $scope.model = {
+            apiKey: ''
+        };
+
+        $scope.passwordInputType = 'password';
+        $scope.passwordButtonLabel = 'Show';
+
+        $scope.togglePasswordVisibility = function () {
+            if ($scope.passwordInputType === 'password') {
+                $scope.passwordInputType = 'text';
+                $scope.passwordButtonLabel = 'Hide';
+            } else {
+                $scope.passwordInputType = 'password';
+                $scope.passwordButtonLabel = 'Show';
+            }
+        };
         
         $scope.init = function () {
             $http.get(loadUrl).then(function (response) {

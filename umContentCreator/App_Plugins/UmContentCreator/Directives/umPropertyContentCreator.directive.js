@@ -13,16 +13,32 @@
             return;
         }
 
+        let parentWithMultipleTextBoxController = propertyElement.closest('[ng-controller="Umbraco.PropertyEditors.MultipleTextBoxController"]');
+
+        if (parentWithMultipleTextBoxController) {
+            return;
+        }
+
         processedElements.add(propertyElement);
 
-        const propertyEditor = propertyElement.querySelector(
+        const controller = propertyElement.querySelector(
             '[ng-controller="Umbraco.PropertyEditors.textboxController"], [ng-controller="Umbraco.PropertyEditors.textAreaController"], [ng-controller="Umbraco.PropertyEditors.RTEController"]'
         );
 
-        if (propertyEditor && !propertyEditor.querySelector('.um-content-creator')) {
+        if (controller && !controller.querySelector('.um-content-creator')) {
             const contentCreatorWrapper = document.createElement('div');
+            const formElement = controller.querySelector('ng-form');
+            const rte = formElement.querySelector('.umb-rte-editor-con');
             contentCreatorWrapper.setAttribute('um-content-creator', '');
-            propertyEditor.appendChild(contentCreatorWrapper);
+
+            if (rte) {
+                rte.style.width = '100%';
+            }
+            formElement.style.display = 'flex';
+            formElement.style.flexDirection = 'row';
+            formElement.style.gap = '10px';
+
+            formElement.appendChild(contentCreatorWrapper);
 
             const $scope = angular.element(propertyElement).scope();
             const $compile = angular.element(propertyElement).injector().get("$compile");
@@ -32,10 +48,10 @@
                 if (!$scope.$$phase) {
                     $scope.$apply();
                 }
-            }, 0);
+            }, 500);
         }
     }
-    
+
     setInterval(() => {
         const propertyElements = document.querySelectorAll("umb-property");
         propertyElements.forEach(addContentCreator);

@@ -1,11 +1,13 @@
 ﻿<div ng-controller="UmContentCreatorController">
-    <button ng-click="openModal($event)" id="openModalButton" class="open-modal" unique-id="{{$id}}">Create Content</button>
+    <button ng-click="openModal($event)" id="openModalButton" class="open-modal" unique-id="{{$id}}">AI</button>
     <div id="{{'myModal' + $id}}" class="um-content-creator-modal">
         <div id="{{'myModalContent' + $id}}" class="um-content-creator-modal-content">
-        <div class="close-modal">
+        <div class="um-modal-title">
+                <p ng-bind-html="configurationObject.modalCaptionText"></p>
                 <span ng-click="closeModal()">&times;</span>
             </div>
             <div class="um-content-creator">
+                
                 <div class="content">
                     <div>
                         <label for="tokensSlider">Max words per response:</label>
@@ -57,9 +59,7 @@
                                     ng-disabled="!configurationObject.generatedText">Replace</button>
                             <button class="extend"
                                     ng-show="configurationObject.propertyHasValue && configurationObject.generatedText"
-                                    ng-click="updateContentOfProperty($event, false)">Extend</button>
-                            <button class="discard" 
-                                    ng-click="resetSettings($event)">Discard</button>
+                                    ng-click="updateContentOfProperty($event, false)">Append</button>
                         </div>
                     </div>
                 </div>

@@ -14,6 +14,7 @@
 		<Authors>OSKI solutions</Authors>
 		<Description></Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryUrl>https://github.com/Kirill19837/umContentCreator</RepositoryUrl>
     </PropertyGroup>
 
 	<ItemGroup>
@@ -30,14 +31,12 @@
 		
 	</ItemGroup>
 
-
-	<ItemGroup>
-	  <ProjectReference Include="..\umContentCreator.Core\umContentCreator.Core.csproj" />
-	</ItemGroup>
-
-
 	<ItemGroup>
 	  <Folder Include="MyPackages" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="umContentCreator.Core" Version="1.0.0" />
 	</ItemGroup>
 
 </Project>

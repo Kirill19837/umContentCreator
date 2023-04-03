@@ -4,10 +4,18 @@
         selectedPropertyKey: '',
         selectedPropertyAlias: '',
         nestedItemDetails: ''
+    };
+
+    function isValidData(data) {
+        return data && typeof data === 'object' && !Array.isArray(data);
     }
-    
+
     return {
         getActiveProperty: function (property) {
+            if (!isValidData(property) || !property.hasOwnProperty('alias') || !property.hasOwnProperty('value')) {
+                return null;
+            }
+
             const nestedPropertyPath = configuration.nestedItemDetails
                 .replace(`___${configuration.selectedPropertyAlias}`, '')
                 .split("___");
@@ -17,7 +25,7 @@
             }
 
             const findNestedProperty = (items, nestedPropertyPath) => {
-                if (!items || !nestedPropertyPath) {
+                if (!Array.isArray(items) || !Array.isArray(nestedPropertyPath)) {
                     return null;
                 }
 
@@ -58,9 +66,17 @@
             }
         },
         setConfiguration: function (selectedPropertyKey, selectedPropertyAlias, nestedItemDetails) {
-            configuration.selectedPropertyKey = selectedPropertyKey;
-            configuration.nestedItemDetails = nestedItemDetails;
-            configuration.selectedPropertyAlias = selectedPropertyAlias;
+            if (typeof selectedPropertyKey === 'string') {
+                configuration.selectedPropertyKey = selectedPropertyKey;
+            }
+
+            if (typeof selectedPropertyAlias === 'string') {
+                configuration.selectedPropertyAlias = selectedPropertyAlias;
+            }
+
+            if (typeof nestedItemDetails === 'string') {
+                configuration.nestedItemDetails = nestedItemDetails;
+            }
         }
     };
 });

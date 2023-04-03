@@ -11,7 +11,7 @@
             event.preventDefault();
 
             $scope.configurationObject = umContentCreatorService.getInitialValues();
-            umContentCreatorService.setSelectedProperty(event, editorState);
+            $scope.configurationObject.modalCaptionText = umContentCreatorService.setSelectedProperty(event, editorState);
             $scope.configurationObject.propertyHasValue = umContentCreatorService.checkIfPropertyHasValue();
             
             const button = event.target;
@@ -87,11 +87,5 @@
                 .catch(function (error) {
                     notificationsService.error(error);
                 });
-        }
-
-        $scope.resetSettings = (event) => {
-            event.stopPropagation();
-            event.preventDefault();
-            $scope.configurationObject = umContentCreatorService.getInitialValues();
         }
     });

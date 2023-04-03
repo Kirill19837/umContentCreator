@@ -7,7 +7,7 @@
                 <input id="apiKey" ng-model="model.apiKey" type="password" required>
             </div>
             <div>
-                <button class="submit" ng-click="save()" ng-disabled="settingsForm.$invalid" type="button">Save</button>
+                <button class="submit" ng-click="save()" ng-disabled="!model.apiKey" type="button">Save</button>
             </div>
         </form>
     </div>

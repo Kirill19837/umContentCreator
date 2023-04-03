@@ -2,7 +2,7 @@
     function ($http, contentResource, notificationsService, $document, blockItemsService, nestedItemsService) {
         const blockListAlias = 'Umbraco.BlockList';
         const blockGridAlias = 'Umbraco.BlockGrid';
-        
+
         const defaultConfiguration = {
             generationModel: {
                 prompt: '',
@@ -23,28 +23,46 @@
             propertyToUpdate: null,
             generateButtonText: 'Generate'
         };
-        
+
+        function isValidData(data) {
+            return data && typeof data === 'object' && !Array.isArray(data);
+        }
+
+        function isValidArray(arr) {
+            return arr && Array.isArray(arr);
+        }
+
         let configuration;
-        
+
         return {
             getInitialValues: function () {
                 configuration = JSON.parse(JSON.stringify(defaultConfiguration));
                 return configuration;
             },
             checkIfPropertyHasValue: function () {
-                const value = configuration.propertyToUpdate?.value ?? configuration.propertyToUpdate[configuration.selectedPropertyAlias];
-                
-                if (value === null || value === undefined) {
+                const propertyToUpdate = configuration.propertyToUpdate;
+
+                if (!isValidData(propertyToUpdate)) {
+                    return;
+                }
+
+                const value = propertyToUpdate.value ?? propertyToUpdate[configuration.selectedPropertyAlias];
+
+                if (!value) {
                     return false;
                 }
-                
+
                 return value.length !== 0;
             },
             getGeneratedText: function (generationModel) {
+                if (!isValidData(generationModel)) {
+                    return;
+                }
+
                 configuration.isGenerating = true;
                 generationModel.propertyEditorAlias = configuration.generationModel.propertyEditorAlias;
                 configuration.generationModel = generationModel;
-                
+
                 $http.post("/umbraco/api/UmContentCreator/GetGeneratedText", generationModel)
                     .then(function (response) {
                         configuration.generatedText = response.data;
@@ -55,49 +73,69 @@
                         notificationsService.error('Error', 'Failed to update property value.');
                         configuration.isGenerating = false;
                     });
-                
+
                 return configuration;
             },
             getPropertiesAndContent: function (editorState) {
+                if (!isValidData(editorState) || !isValidData(editorState.current)) {
+                    return {content: null, properties: []};
+                }
+
                 const content = editorState.current;
                 const variant = content.variants[0];
+
+                if (!isValidData(variant) || !isValidArray(variant.tabs)) {
+                    return {content, properties: []};
+                }
+
                 const properties = variant.tabs.flatMap(t => t.properties);
-                
+
                 return {content, properties};
-            }, 
+            },
             updateContentOfProperty: function (replace) {
                 return new Promise((resolve, reject) => {
                     const propertyToUpdate = configuration.propertyToUpdate;
                     const content = configuration.content;
-                    
-                    if (!propertyToUpdate) {
+                    const generatedText = configuration.generatedText;
+
+                    if (!isValidData(propertyToUpdate) || !content || !generatedText) {
                         reject('Failed to find the property to update.');
                         return;
                     }
+
                     switch (propertyToUpdate.editor) {
                         case "Umbraco.NestedContent": {
-                            propertyToUpdate[configuration.selectedPropertyAlias] = configuration.generatedText;
+                            if (!replace) {
+                                propertyToUpdate[configuration.selectedPropertyAlias] = propertyToUpdate[configuration.selectedPropertyAlias] + generatedText;
+                                break;
+                            }
+
+                            propertyToUpdate[configuration.selectedPropertyAlias] = generatedText;
                             break;
                         }
                         case "Umbraco.BlockList": {
-                            propertyToUpdate[configuration.selectedPropertyAlias] = configuration.generatedText;
+                            propertyToUpdate[configuration.selectedPropertyAlias] = generatedText;
                             break;
                         }
                         case "Umbraco.BlockGrid": {
-                            let generatedText = configuration.generatedText;
-                            
                             if (!replace) {
-                                generatedText = propertyToUpdate[configuration.selectedPropertyAlias] + generatedText;
+                                propertyToUpdate[configuration.selectedPropertyAlias] = propertyToUpdate[configuration.selectedPropertyAlias] + generatedText;
+                                break;
                             }
                             propertyToUpdate[configuration.selectedPropertyAlias] = generatedText;
                             break;
                         }
                         default: {
-                            propertyToUpdate.value = configuration.generatedText;
+                            if (!replace) {
+                                propertyToUpdate.value = propertyToUpdate.value + generatedText;
+                                break;
+                            }
+                            propertyToUpdate.value = generatedText;
                             break;
                         }
                     }
 
+                    delete propertyToUpdate.editor;
                     contentResource.save(content, false, [])
                         .then(function () {
                             notificationsService.success('Content created successfully.');
@@ -119,29 +157,33 @@
                 const targetElement = this.getTargetElement();
                 if (targetElement.length) {
                     const currentText = targetElement.val();
-                    
+
                     if (replace) {
                         targetElement.val(configuration.generatedText);
                     } else {
                         targetElement.val(currentText + '\n' + configuration.generatedText);
                     }
-                    
+
                     targetElement.triggerHandler('input');
                 }
             },
             findProperty: function (properties) {
+                if (!isValidArray(properties)) {
+                    return null;
+                }
+
                 for (const property of properties) {
                     if (property?.alias === configuration.selectedPropertyAlias) {
                         return property;
                     }
-    
+
                     if (property.editor === blockListAlias || property.editor === blockGridAlias) {
                         const activeProperty = blockItemsService.getActiveProperty(property);
-                        
+
                         if (!activeProperty) {
                             continue;
                         }
-                        
+
                         return activeProperty;
                     }
                     if (property.editor === "Umbraco.NestedContent") {
@@ -153,41 +195,42 @@
 
                         return activeProperty;
                     }
-
                 }
                 return null;
             },
-            getPropertyElementAndControllerName: function (event) {
+            getPropertyElementDetails: function (event) {
                 const targetElement = angular.element(event.target);
                 const propertyElement = targetElement.closest('umb-property');
                 const controllerElement = propertyElement.find('[ng-controller]').first();
                 const controllerName = controllerElement.attr('ng-controller').split(' ').pop();
+
                 return {propertyElement, controllerName};
-            }, 
+            },
             getPropertyDetails: function (propertyElement) {
                 const selectedPropertyKey = propertyElement.attr('element-key');
+                const labelKey = propertyElement.attr('data-element').replace('property-', 'property-label-');
+                const label = propertyElement.find(`label[data-element=${labelKey}]`)[0];
+                const modalCaptionText = 'Create content for ' + `<span>${label?.innerText?.replace('*', '')}</span>`;
                 const dataElementValue = propertyElement.attr('data-element').split('-').pop();
                 const nestedItemDetails = dataElementValue.split('___');
                 const selectedPropertyAlias = nestedItemDetails.length === 1 ? dataElementValue : nestedItemDetails[nestedItemDetails.length - 1];
-                return {selectedPropertyKey, dataElementValue, selectedPropertyAlias};
-            }, 
+                return {selectedPropertyKey, dataElementValue, selectedPropertyAlias, modalCaptionText};
+            },
             setSelectedProperty: function (event, editorState) {
-                const {propertyElement, controllerName} = this.getPropertyElementAndControllerName(event);
-
-                const {selectedPropertyKey, dataElementValue, selectedPropertyAlias} = this.getPropertyDetails(propertyElement);
-
+                const {propertyElement, controllerName} = this.getPropertyElementDetails(event);
+                const {selectedPropertyKey, dataElementValue, selectedPropertyAlias, modalCaptionText} = this.getPropertyDetails(propertyElement);
                 let selectedPropertyEditorAlias = '';
-                
+
                 switch (controllerName) {
-                    case "Umbraco.PropertyEditors.textAreaController" : {
+                    case "Umbraco.PropertyEditors.textAreaController": {
                         selectedPropertyEditorAlias = "Umbraco.TextArea";
                         break;
                     }
-                    case "Umbraco.PropertyEditors.textboxController" : {
+                    case "Umbraco.PropertyEditors.textboxController": {
                         selectedPropertyEditorAlias = "Umbraco.TextBox";
                         break;
                     }
-                    case "Umbraco.PropertyEditors.RTEController" : {
+                    case "Umbraco.PropertyEditors.RTEController": {
                         selectedPropertyEditorAlias = "Umbraco.TinyMCE";
                         break;
                     }
@@ -195,16 +238,18 @@
 
                 configuration.generationModel.propertyEditorAlias = selectedPropertyEditorAlias;
                 configuration.selectedPropertyAlias = selectedPropertyAlias;
-                
+
                 blockItemsService.setPropertyKey(selectedPropertyKey);
                 nestedItemsService.setConfiguration(selectedPropertyKey, selectedPropertyAlias, dataElementValue);
                 configuration.nestedItemDetails = dataElementValue;
-                
+
                 const {content, properties} = this.getPropertiesAndContent(editorState);
                 const propertyToUpdate = this.findProperty(properties);
 
                 configuration.content = content;
                 configuration.propertyToUpdate = propertyToUpdate;
+
+                return modalCaptionText;
             }
         };
-});
+    });
