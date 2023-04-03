@@ -3,7 +3,6 @@
         restrict: 'A',
         templateUrl: '/App_Plugins/UmContentCreator/Views/umContentCreator.html',
         link: function (scope, element, attrs) {
-            // Add any additional functionality here if required
         }
     };
 }]).run(['$timeout', function ($timeout) {
@@ -37,13 +36,8 @@
         }
     }
     
-    setTimeout(() => {
-        const propertyElements = document.querySelectorAll("umb-property");
-        propertyElements.forEach(addContentCreator);
-    }, 2000);
-    
     setInterval(() => {
         const propertyElements = document.querySelectorAll("umb-property");
         propertyElements.forEach(addContentCreator);
-    }, 200);
+    }, 400);
 }]);

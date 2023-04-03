@@ -65,7 +65,7 @@
                 
                 return {content, properties};
             }, 
-            updateContentOfProperty: function () {
+            updateContentOfProperty: function (replace) {
                 return new Promise((resolve, reject) => {
                     const propertyToUpdate = configuration.propertyToUpdate;
                     const content = configuration.content;
@@ -84,7 +84,12 @@
                             break;
                         }
                         case "Umbraco.BlockGrid": {
-                            propertyToUpdate[configuration.selectedPropertyAlias] = configuration.generatedText;
+                            let generatedText = configuration.generatedText;
+                            
+                            if (!replace) {
+                                generatedText = propertyToUpdate[configuration.selectedPropertyAlias] + generatedText;
+                            }
+                            propertyToUpdate[configuration.selectedPropertyAlias] = generatedText;
                             break;
                         }
                         default: {

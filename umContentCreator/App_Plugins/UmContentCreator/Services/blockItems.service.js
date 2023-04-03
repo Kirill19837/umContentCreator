@@ -33,7 +33,7 @@
         },
         getActiveBlockItem: function (property) {
             const contentData = property.value.contentData;
-            const udi = `umb://element/${configuration.selectedPropertyKey.replace(/-/g, "")}`;
+            const udi = `umb://element/${configuration.selectedPropertyKey?.replace(/-/g, "")}`;
             return this.findNestedContentDataInArray(contentData, udi);
         },
         getActiveProperty: function (property) {
