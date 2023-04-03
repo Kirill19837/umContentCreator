@@ -12,7 +12,6 @@
 
             $scope.configurationObject = umContentCreatorService.getInitialValues();
             umContentCreatorService.setSelectedProperty(event, editorState);
-            $scope.configurationObject.userAcceptedOverride = false;
             $scope.configurationObject.propertyHasValue = umContentCreatorService.checkIfPropertyHasValue();
             
             const button = event.target;
