@@ -1,0 +1,77 @@
+﻿/* Configuration */
+
+.settings-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.settings h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.settingsForm {
+    display: flex;
+    flex-direction: column;
+}
+
+.input {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+.size-options-input {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.input label {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.input select,
+.input input {
+    padding: 0.5rem;
+    height: 45px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    min-width: 40%;
+    width: 100%;
+}
+
+.input input:focus,
+.input select:focus {
+    border-color: #007bff;
+}
+
+.submit {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: #007bff;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+    outline: none;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.submit:hover {
+    background-color: #0056b3;
+}
+
+.submit:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}

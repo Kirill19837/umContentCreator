@@ -1,0 +1,143 @@
+﻿/* Content creator */
+.um-content-creator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.um-content-creator .content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+.um-content-creator .content label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 18px;
+}
+
+.um-content-creator .content select,
+.um-content-creator .content textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 5px;
+    font-size: 18px;
+    line-height: 1.4;
+    resize: none;
+    border-radius: 5px;
+}
+
+.um-content-creator .content input[type="range"] {
+    width: 100%;
+}
+
+.um-content-creator .content .generated-text textarea {
+    min-height: 200px;
+}
+
+.um-content-creator-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.buttons-right {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.um-content-creator-buttons button {
+    background-color: lightgrey;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.um-content-creator-buttons button:hover {
+    transform: scale(1.05);
+}
+
+.um-content-creator-buttons button:active {
+    transform: scale(0.95);
+}
+
+.um-content-creator-buttons button[disabled] {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.um-content-creator-buttons .generate {
+    background-color: #2196F3;
+    color: white !important;
+}
+
+.um-content-creator-buttons .generate:hover {
+    background-color: #1976D2;
+}
+
+.um-content-creator-buttons .replace {
+    background-color: #4CAF50 !important;
+    color: white !important;
+}
+
+.um-content-creator-buttons .replace:hover {
+    background-color: #3F9142 !important;
+}
+
+.um-content-creator-buttons .extend {
+    background-color: #4CAF50 !important;
+    color: white !important;
+}
+
+.um-content-creator-buttons .extend:hover {
+    background-color: #3F9142 !important;
+}
+
+.um-content-creator-buttons .discard {
+    background-color: #F44336 !important;
+    color: white;
+}
+
+.um-content-creator-buttons .discard:hover {
+    background-color: #D32F2F !important;
+}
+
+.um-content-creator .loading-container {
+    display: inline-block;
+}
+
+.loading-container p {
+    display: inline-block;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.dot {
+    display: inline-block;
+    animation: loading-dots 1s infinite;
+    font-size: 30px;
+}
+
+.dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes loading-dots {
+    0%, 80%, 100% {
+        opacity: 0;
+    }
+    40% {
+        opacity: 1;
+    }
+}

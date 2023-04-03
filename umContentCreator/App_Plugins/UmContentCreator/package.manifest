@@ -11,10 +11,15 @@
         "javascript": [
                 "~/App_Plugins/UmContentCreator/Controllers/umContentCreator.controller.js",
                 "~/App_Plugins/UmContentCreator/Controllers/umContentCreatorSettings.controller.js",
-                "~/App_Plugins/UmContentCreator/Services/contentCreatorInjector.js",
+                "~/App_Plugins/UmContentCreator/Directives/umPropertyContentCreator.directive.js",
+                "~/App_Plugins/UmContentCreator/Directives/uniqueId.directive.js",
+                "~/App_Plugins/UmContentCreator/Services/blockItems.service.js",
+                "~/App_Plugins/UmContentCreator/Services/nestedItems.service.js",
                 "~/App_Plugins/UmContentCreator/Services/umContentCreator.service.js",
         ],
         "css": [
-                "~/App_Plugins/UmContentCreator/Styles/styles.css"
+                "~/App_Plugins/UmContentCreator/Styles/umContentCreator.css",
+                "~/App_Plugins/UmContentCreator/Styles/umContentCreatorModal.css",
+                "~/App_Plugins/UmContentCreator/Styles/umContentCreatorSettings.css",
         ]
 }

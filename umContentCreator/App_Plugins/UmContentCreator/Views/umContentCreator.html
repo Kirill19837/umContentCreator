@@ -36,11 +36,6 @@
                                   rows="3" placeholder="Enter a prompt..."></textarea>
                     </div>
 
-                    <div ng-show="configurationObject.propertyHasValue && !configurationObject.userAcceptedOverride" class="override-container">
-                        <p class="override-warning">The property already has a value. Confirm to override it.</p>
-                        <input type="checkbox" ng-model="configurationObject.userAcceptedOverride" id="acceptOverride">
-                    </div>
-                    
                     <div class="loading-container" ng-show="configurationObject.isGenerating">
                         <p>Generating</p><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
                     </div>
@@ -52,12 +47,19 @@
                     </div>
 
                     <div class="um-content-creator-buttons">
-                        <button ng-click="generateText($event)" 
-                                ng-disabled="!configurationObject.generationModel.prompt || configurationObject.isGenerating || !configurationObject.userAcceptedOverride">Generate</button>
+                        <button class="generate"
+                                ng-click="generateText($event)" 
+                                ng-disabled="!configurationObject.generationModel.prompt || configurationObject.isGenerating">{{configurationObject.generateButtonText}}</button>
                         
                         <div class="buttons-right" ng-show="configurationObject.generatedText">
-                            <button ng-click="updateContentOfProperty($event)" ng-disabled="!configurationObject.generatedText">Confirm</button>
-                            <button  class="discard" ng-click="resetSettings($event)">Discard</button>
+                            <button class="replace" 
+                                    ng-click="updateContentOfProperty($event, true)"
+                                    ng-disabled="!configurationObject.generatedText">Replace</button>
+                            <button class="extend"
+                                    ng-show="configurationObject.propertyHasValue && configurationObject.generatedText"
+                                    ng-click="updateContentOfProperty($event, false)">Extend</button>
+                            <button class="discard" 
+                                    ng-click="resetSettings($event)">Discard</button>
                         </div>
                     </div>
                 </div>

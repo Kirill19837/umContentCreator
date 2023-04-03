@@ -1,25 +1,16 @@
-﻿angular.module('umbraco').directive('uniqueId', function () {
-    let idCounter = 0;
-    return {
-        restrict: 'A',
-        link: function (scope, element) {
-            idCounter += 1;
-            element.attr('unique-Id', idCounter);
-        },
-    };
-});
-
-angular.module('umbraco').controller('UmContentCreatorController',
+﻿angular.module('umbraco').controller('UmContentCreatorController',
     function ($scope, $http, $routeParams, $timeout, editorState, umContentCreatorService, notificationsService) {
-        $scope.configurationObject = umContentCreatorService.getInitialValues();
         const navigation = document.getElementById("navigation");
+        $scope.configurationObject = null;
+        
         let modal;
         let modalContent;
         
         $scope.openModal = (event) => {
             event.stopPropagation();
             event.preventDefault();
-            
+
+            $scope.configurationObject = umContentCreatorService.getInitialValues();
             umContentCreatorService.setSelectedProperty(event, editorState);
             $scope.configurationObject.userAcceptedOverride = false;
             $scope.configurationObject.propertyHasValue = umContentCreatorService.checkIfPropertyHasValue();
@@ -75,6 +66,7 @@ angular.module('umbraco').controller('UmContentCreatorController',
         $scope.generateText = (event) => {
             event.stopPropagation();
             event.preventDefault();
+            $scope.configurationObject.generatedText = null;
             
             if (!$scope.configurationObject.generationModel.prompt) {
                 return;
@@ -83,12 +75,13 @@ angular.module('umbraco').controller('UmContentCreatorController',
             $scope.configurationObject = umContentCreatorService.getGeneratedText($scope.configurationObject.generationModel);
         };
         
-        $scope.updateContentOfProperty = (event) =>  {
+        $scope.updateContentOfProperty = (event, replace) =>  {
             event.stopPropagation();
             event.preventDefault();
 
             umContentCreatorService.updateContentOfProperty(editorState)
                 .then(function () {
+                    umContentCreatorService.updateContentInDOM(replace);
                     $scope.closeModal();
                     $scope.configurationObject = umContentCreatorService.getInitialValues();
                 })
@@ -96,7 +89,7 @@ angular.module('umbraco').controller('UmContentCreatorController',
                     notificationsService.error(error);
                 });
         }
-        
+
         $scope.resetSettings = (event) => {
             event.stopPropagation();
             event.preventDefault();
