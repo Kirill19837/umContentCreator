@@ -1,7 +1,6 @@
 ﻿/* Modal */
 #openModalButton {
     font-weight: bold;
-    background-color: #2196F3;
     color: white;
     border: none;
     border-radius: 5px;
@@ -11,8 +10,12 @@
     transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
+#openModalButton img {
+    max-width: 20px;
+    height: 20px;
+}
+
 #openModalButton:hover {
-    background-color: #1976D2;
     transform: translateY(-2px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }

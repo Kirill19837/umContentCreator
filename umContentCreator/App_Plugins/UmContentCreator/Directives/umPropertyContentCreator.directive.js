@@ -5,7 +5,7 @@
         link: function (scope, element, attrs) {
         }
     };
-}]).run(['$timeout', function ($timeout) {
+}]).run(function () {
     const processedElements = new Set();
 
     function addContentCreator(propertyElement) {
@@ -44,11 +44,7 @@
             const $compile = angular.element(propertyElement).injector().get("$compile");
             $compile(contentCreatorWrapper)($scope);
 
-            $timeout(() => {
-                if (!$scope.$$phase) {
-                    $scope.$apply();
-                }
-            }, 500);
+            $scope.$apply();
         }
     }
 
@@ -56,4 +52,4 @@
         const propertyElements = document.querySelectorAll("umb-property");
         propertyElements.forEach(addContentCreator);
     }, 500);
-}]);
+});

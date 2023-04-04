@@ -1,5 +1,11 @@
 ﻿<div ng-controller="UmContentCreatorController">
-    <button ng-click="openModal($event)" id="openModalButton" class="open-modal" unique-id="{{$id}}">AI</button>
+    <button ng-click="openModal($event)"
+            id="openModalButton" 
+            class="open-modal"
+            unique-id="{{$id}}"
+            title="Create content">
+        <img src="/App_Plugins/UmContentCreator/icon.png">
+    </button>
     <div id="{{'myModal' + $id}}" class="um-content-creator-modal">
         <div id="{{'myModalContent' + $id}}" class="um-content-creator-modal-content">
         <div class="um-modal-title">
