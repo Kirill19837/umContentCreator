@@ -478,3 +478,4 @@ appsettings-schema.*.json
 # Media files
 /wwwroot/media/
 /Test.csproj
+/Test.csproj

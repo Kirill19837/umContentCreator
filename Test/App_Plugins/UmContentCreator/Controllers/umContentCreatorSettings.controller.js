@@ -2,21 +2,28 @@
     function ($scope, $http, notificationsService) {
         const saveUrl = "/Umbraco/Api/Configuration/SaveSettings";
         const loadUrl = "/Umbraco/Api/Configuration/LoadSettings";
-        const modelsUrl = "/Umbraco/Api/Configuration/GetAvailableModels";
-        $scope.model = {};
-        $scope.availableModels = [];
+        $scope.model = {
+            apiKey: ''
+        };
+
+        $scope.passwordInputType = 'password';
+        $scope.passwordButtonLabel = 'Show';
+
+        $scope.togglePasswordVisibility = function () {
+            if ($scope.passwordInputType === 'password') {
+                $scope.passwordInputType = 'text';
+                $scope.passwordButtonLabel = 'Hide';
+            } else {
+                $scope.passwordInputType = 'password';
+                $scope.passwordButtonLabel = 'Show';
+            }
+        };
         
         $scope.init = function () {
             $http.get(loadUrl).then(function (response) {
                 $scope.model = response.data;
             }).catch(function () {
                 notificationsService.error("Error", "Failed to load settings.");
-            });
-
-            $http.get(modelsUrl).then(function (response) {
-                $scope.availableModels = response.data;
-            }).catch(function () {
-                notificationsService.error("Error", "Failed to load available models.");
             });
         };
 

@@ -12,9 +12,14 @@
 		<PackageTags>umbraco-marketplace</PackageTags>
 		<Company>$(Authors)</Company>
 		<Authors>OSKI solutions</Authors>
-		<Description></Description>
+		<Description>
+			Enhance your Umbraco CMS with AI-driven content generation. This package integrates the Chat GPT API, offering a seamless UI to create, manage, and customize AI-generated text for your text properties. Gain more control over content with options for max words, model behavior, and easy content appending or replacement.
+		</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryUrl>https://github.com/Kirill19837/umContentCreator</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageIcon>logo.png</PackageIcon>
     </PropertyGroup>
 
 	<ItemGroup>
@@ -33,6 +38,11 @@
 
 	<ItemGroup>
 	  <Folder Include="MyPackages" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="logo.png" Pack="true" PackPath="\" />
+		<None Include="README.md" Pack="true" PackagePath="" />
 	</ItemGroup>
 
 	<ItemGroup>

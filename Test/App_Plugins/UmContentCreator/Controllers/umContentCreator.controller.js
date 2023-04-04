@@ -1,79 +1,98 @@
 ﻿angular.module('umbraco').controller('UmContentCreatorController',
-    function ($scope, $http, $routeParams, contentResource, notificationsService, editorState) {
-        $scope.properties = [];
-        $scope.selectedProperty = null;
-        $scope.selectedTokens = 50;
-        $scope.selectedTemperature = 0.6;
-        $scope.temperatureLabels = {
-            0.2: 'Conservative',
-            0.4: 'Cautious',
-            0.6: 'Balanced',
-            0.8: 'Creative',
-            1.0: 'Adventurous'
-        };
-        $scope.isGenerating = false;
-        $scope.prompt = '';
-        $scope.contentId = parseInt($routeParams.id, 10);
-        $scope.getPropertiesUrl = "/umbraco/api/UmContentCreator/GetProperties";
-        $scope.getGeneratedTextUrl = "/umbraco/api/UmContentCreator/GetGeneratedText";
-        
-        $scope.init = function () {
-            if (!$routeParams.section || $routeParams.section !== 'content' || isNaN($scope.contentId)) {
+    function ($scope, $http, $routeParams, $timeout, editorState, umContentCreatorService, notificationsService) {
+        const navigation = document.getElementById("navigation");
+        $scope.configurationObject = null;
+
+        let modal;
+        let modalContent;
+
+        $scope.openModal = (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+
+            $scope.configurationObject = umContentCreatorService.getInitialValues();
+            $scope.configurationObject.modalCaptionText = umContentCreatorService.setSelectedProperty(event, editorState);
+            $scope.configurationObject.propertyHasValue = umContentCreatorService.checkIfPropertyHasValue();
+
+            if (typeof event.target === 'undefined' || event.target === null) {
                 return;
             }
-            
-            $http.get($scope.getPropertiesUrl, {params: {contentId: $scope.contentId}})
-                .then(function (response) {
-                    $scope.properties = response.data;
-                })
-                .catch(function () {
-                    notificationsService.error('Error', 'Failed to load properties.');
-                });
+
+            const button = event.target.closest("button");
+            const uniqueId = button.getAttribute('unique-id');
+            modal = document.getElementById('myModal' + uniqueId);
+            modalContent = document.getElementById('myModalContent' + uniqueId);
+
+            if (modal && modalContent) {
+                navigation.classList.add("ng-hide");
+                modal.style.display = "block";
+                modalContent.style.display = "block";
+            }
+
+            window.addEventListener('mousedown', closeOnOutsideClick);
         };
+
+
+        const closeOnOutsideClick = (event) => {
+            if (modalContent && !isDescendant(modalContent, event.target) && event.target !== modalContent && event.target.id !== "openModalButton") {
+                modal.style.display = "none";
+                modalContent.style.display = "none";
+                window.removeEventListener('mousedown', closeOnOutsideClick);
+            }
+        };
+
+        const isDescendant = (parent, child) => {
+            let node = child.parentNode;
+
+            if (node === null) {
+                return false;
+            }
+
+            if (node === parent) {
+                return true;
+            }
+
+            return isDescendant(parent, node);
+        };
+
+        $scope.closeModal = () => {
+            navigation.classList.remove("ng-hide");
+            modal.style.display = "none";
+            modalContent.style.display = "none";
+            $scope.configurationObject = umContentCreatorService.getInitialValues();
+        }
 
         $scope.getTemperatureLabel = function (temperatureValue) {
-            return $scope.temperatureLabels[temperatureValue];
+            if (!$scope.configurationObject?.temperatureLabels) {
+                return;
+            }
+            return $scope.configurationObject?.temperatureLabels[temperatureValue];
         };
-        
-        $scope.generate = function () {
-            if (!$scope.selectedProperty || !$scope.prompt) {
-                return;
-            }
-            
-            const content = editorState.current;
-            const variant = content.variants[0];
-            const properties = variant.tabs.flatMap(t => t.properties);
-     
-            const propertyToUpdate = properties.find(function (property) {
-                return property.alias === $scope.selectedProperty.propertyAlias;
-            });
 
-            if (!propertyToUpdate) {
-                notificationsService.error('Error', 'Failed to find the property to update.');
+        $scope.generateText = (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            $scope.configurationObject.generatedText = null;
+
+            if (!$scope.configurationObject.generationModel.prompt) {
                 return;
             }
 
-            $scope.isGenerating = true;
-            
-            $http.post($scope.getGeneratedTextUrl, {
-                prompt: $scope.prompt,
-                maxTokens: $scope.selectedTokens,
-                temperature: $scope.selectedTemperature,
-                propertyEditorAlias: $scope.selectedProperty.propertyEditorAlias
-            }).then(function (response) {
-                propertyToUpdate.value = response.data;
-                $scope.isGenerating = false;
-                contentResource.save(content, false, [])
-                    .then(function () {})
-                    .catch(function () {
-                        $scope.isGenerating = false;
-                        notificationsService.error('Error', 'Failed to update property value.');
+            $scope.configurationObject = umContentCreatorService.getGeneratedText($scope.configurationObject.generationModel);
+        };
+
+        $scope.updateContentOfProperty = (event, replace) => {
+            event.stopPropagation();
+            event.preventDefault();
+
+            umContentCreatorService.updateContentOfProperty(replace)
+                .then(function () {
+                    umContentCreatorService.updateContentInDOM(replace);
+                    $scope.closeModal();
+                    $scope.configurationObject = umContentCreatorService.getInitialValues();
+                })
+                .catch(function (error) {
+                    notificationsService.error(error);
                 });
-            }).catch(function () {
-                notificationsService.error('Error', 'Failed to update property value.');
-            });
-        };
-
-
-        $scope.init();
+        }
     });

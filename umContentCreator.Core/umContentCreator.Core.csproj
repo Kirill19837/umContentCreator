@@ -16,8 +16,9 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>disable</Nullable>
-        <Description>This package contains core logic of umContentCteator package.</Description>
+        <Description>This package contains the core logic of the umContentCreator package.</Description>
         <RepositoryUrl>https://github.com/Kirill19837/umContentCreator</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
     </PropertyGroup>
 
     <ItemGroup>
