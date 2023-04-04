@@ -70,7 +70,7 @@
                         configuration.generateButtonText = 'Regenerate';
                     })
                     .catch(function () {
-                        notificationsService.error('Error', 'Failed to update property value.');
+                        notificationsService.error('Error', 'Failed to generate text.');
                         configuration.isGenerating = false;
                     });
 
