@@ -20,6 +20,7 @@
 		<RepositoryType>git</RepositoryType>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageIcon>logo.png</PackageIcon>
+		<PackageProjectUrl>https://oski.site/</PackageProjectUrl>
     </PropertyGroup>
 
 	<ItemGroup>
