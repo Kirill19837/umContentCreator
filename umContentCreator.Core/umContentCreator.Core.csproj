@@ -9,7 +9,6 @@
         <Title>umContentCreator.Core</Title>
         <Product>umContentCreator.Core</Product>
         <PackageId>umContentCreator.Core</PackageId>
-        <PackageTags>umbraco-marketplace</PackageTags>
         <Company>$(Authors)</Company>
         <Authors>OSKI solutions</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
