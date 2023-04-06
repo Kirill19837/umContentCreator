@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-		<AssemblyVersion>1.0.0</AssemblyVersion>
-		<Version>1.0.0</Version>
-		<InformationalVersion>1.0.0</InformationalVersion>
+		<AssemblyVersion>1.0.1</AssemblyVersion>
+		<Version>1.0.1</Version>
+		<InformationalVersion>1.0.1</InformationalVersion>
 		<TargetFramework>net6.0</TargetFramework>
 		<ContentTargetFolders>.</ContentTargetFolders>
 		<Product>umContentCreator</Product>
@@ -21,6 +21,7 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageProjectUrl>https://oski.site/</PackageProjectUrl>
+		<PackageReleaseNotes>1) Change error message when text is not generating. 2) Add configuration for Umbraco Marketplace.</PackageReleaseNotes>
     </PropertyGroup>
 
 	<ItemGroup>
