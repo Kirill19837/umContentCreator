@@ -86,8 +86,8 @@
             event.preventDefault();
 
             umContentCreatorService.updateContentOfProperty(replace)
-                .then(function () {
-                    umContentCreatorService.updateContentInDOM(replace);
+                .then(function (propertyEditor) {
+                    umContentCreatorService.updateContentInDOM(replace, propertyEditor);
                     $scope.closeModal();
                     $scope.configurationObject = umContentCreatorService.getInitialValues();
                 })
