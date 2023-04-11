@@ -37,6 +37,7 @@
             if (modalContent && !isDescendant(modalContent, event.target) && event.target !== modalContent && event.target.id !== "openModalButton") {
                 modal.style.display = "none";
                 modalContent.style.display = "none";
+                navigation.classList.remove("ng-hide");
                 window.removeEventListener('mousedown', closeOnOutsideClick);
             }
         };
