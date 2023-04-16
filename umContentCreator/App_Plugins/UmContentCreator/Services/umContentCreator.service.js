@@ -135,11 +135,10 @@
                         }
                     }
 
-                    delete propertyToUpdate.editor;
                     contentResource.save(content, false, [])
                         .then(function () {
                             notificationsService.success('Content created successfully.');
-                            resolve();
+                            resolve(propertyToUpdate.editor);
                         })
                         .catch(function () {
                             reject('Failed to update property value.');
@@ -150,10 +149,13 @@
                 const propertyAlias = configuration.selectedPropertyAlias;
                 const targetElementFromNestedContent = angular.element($document[0].querySelector(`input[id$="${configuration.nestedItemDetails}"], textarea[id$="${configuration.nestedItemDetails}"]`));
                 const targetElementFromBlockListContent = angular.element($document[0].querySelector(`input[id$="${propertyAlias}"], textarea[id$="${propertyAlias}"]`));
-                const targetElement = targetElementFromNestedContent.length ? targetElementFromNestedContent : targetElementFromBlockListContent;
-                return targetElement;
+                return targetElementFromNestedContent.length ? targetElementFromNestedContent : targetElementFromBlockListContent;
             },
-            updateContentInDOM: function (replace) {
+            updateContentInDOM: function (replace, propertyEditor) {
+                if (propertyEditor === blockGridAlias) {
+                    return;
+                }
+                
                 const targetElement = this.getTargetElement();
                 if (targetElement.length) {
                     const currentText = targetElement.val();
