@@ -53,6 +53,7 @@
     flex-direction: row;
     justify-content: space-between;
     margin-bottom: 10px;
+    user-select: none;
 }
 
 .um-modal-title span {
@@ -63,17 +64,17 @@
 }
 
 .um-modal-title p {
-    font-size: 22px;
+    font-size: 20px;
     line-height: 1.2;
 }
 
 .um-modal-title p span {
     color: #2196F3;
-    font-size: 22px;
+    font-size: 20px;
 }
 
-.um-modal-title span:hover,
-.um-modal-title span:focus {
+.um-modal-title .close-modal:hover,
+.um-modal-title .close-modal:focus {
     color: black;
     text-decoration: none;
     cursor: pointer;

@@ -3,14 +3,14 @@
             id="openModalButton" 
             class="open-modal"
             unique-id="{{$id}}"
-            title="Create content">
+            title="Create content using AI">
         <img src="/App_Plugins/UmContentCreator/icon.png">
     </button>
     <div id="{{'myModal' + $id}}" class="um-content-creator-modal">
         <div id="{{'myModalContent' + $id}}" class="um-content-creator-modal-content">
         <div class="um-modal-title">
                 <p ng-bind-html="configurationObject.modalCaptionText"></p>
-                <span ng-click="closeModal()">&times;</span>
+                <span class="close-modal" ng-click="closeModal()">&times;</span>
             </div>
             <div class="um-content-creator">
                 
@@ -19,7 +19,7 @@
                         <label for="tokensSlider">Max words per response:</label>
                         <input type="range"
                                id="tokensSlider"
-                               min="50"
+                               min="5"
                                max="2048"
                                ng-model="configurationObject.generationModel.maxTokens"
                                step="1">

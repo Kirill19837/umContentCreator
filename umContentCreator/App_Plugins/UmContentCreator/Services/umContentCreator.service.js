@@ -6,7 +6,7 @@
         const defaultConfiguration = {
             generationModel: {
                 prompt: '',
-                maxTokens: 50,
+                maxTokens: 5,
                 temperature: 0.6
             },
             temperatureLabels: {
@@ -80,14 +80,14 @@
                 if (!isValidData(editorState) || !isValidData(editorState.current)) {
                     return {content: null, properties: []};
                 }
-
                 const content = editorState.current;
-                const variant = content.variants[0];
-
+                const variant = content.variants.find(v => v.active === true);
+                
                 if (!isValidData(variant) || !isValidArray(variant.tabs)) {
                     return {content, properties: []};
                 }
-
+                
+                variant.save = true;
                 const properties = variant.tabs.flatMap(t => t.properties);
 
                 return {content, properties};

@@ -13,10 +13,14 @@
     width: 100%;
 }
 
+.um-content-creator .content .temperature-hint {
+    font-size: 14px;
+}
+
 .um-content-creator .content label {
     display: block;
     margin-bottom: 5px;
-    font-size: 18px;
+    font-size: 15px;
 }
 
 .um-content-creator .content select,
@@ -83,21 +87,21 @@
 }
 
 .um-content-creator-buttons .replace {
-    background-color: #4CAF50 !important;
+    background-color: #2bc37c !important;
     color: white !important;
 }
 
 .um-content-creator-buttons .replace:hover {
-    background-color: #3F9142 !important;
+    background-color: #0a9354 !important;
 }
 
 .um-content-creator-buttons .extend {
-    background-color: #4CAF50 !important;
+    background-color: #2bc37c !important;
     color: white !important;
 }
 
 .um-content-creator-buttons .extend:hover {
-    background-color: #3F9142 !important;
+    background-color: #0a9354 !important;
 }
 
 .um-content-creator-buttons .discard {
