@@ -1,7 +1,7 @@
-﻿angular.module('umbraco').directive('umPropertyContentCreator', [function () {
+angular.module('umbraco').directive('umImageContentCreator', [function () {
     return {
         restrict: 'A',
-        templateUrl: '/App_Plugins/UmContentCreator/Views/umPropertyContentCreator.html',
+        templateUrl: '/App_Plugins/UmContentCreator/Views/umImageContentCreator.html',
         link: function () { }
     };
 }]).run(['$compile', '$timeout', '$rootScope', function ($compile, $timeout, $rootScope) {
@@ -13,32 +13,20 @@
                 return;
             }
 
-            let parentWithMultipleTextBoxController = propertyElement.closest('[ng-controller="Umbraco.PropertyEditors.MultipleTextBoxController"]');
-
-            if (parentWithMultipleTextBoxController) {
-                return;
-            }
-
             processedElements.add(propertyElement);
 
             const controller = propertyElement.querySelector(
-                '[ng-controller="Umbraco.PropertyEditors.textboxController"], [ng-controller="Umbraco.PropertyEditors.textAreaController"], [ng-controller="Umbraco.PropertyEditors.RTEController"]'
+                '[ng-controller="Umbraco.PropertyEditors.MediaPickerController as vm"]'
             );
 
             if (controller) {
                 const contentCreatorWrapper = document.createElement('div');
-                const formElement = controller.querySelector('ng-form');
-                const rte = formElement.querySelector('.umb-rte-editor-con');
-                contentCreatorWrapper.setAttribute('um-property-content-creator', '');
+                contentCreatorWrapper.setAttribute('um-image-content-creator', '');
 
-                if (rte) {
-                    rte.style.width = '100%';
-                }
-                formElement.style.display = 'flex';
-                formElement.style.flexDirection = 'row';
-                formElement.style.gap = '10px';
-
-                formElement.appendChild(contentCreatorWrapper);
+                controller.style.display = 'flex';
+                controller.style.gap = '5px';
+                contentCreatorWrapper.style.border = 'none';
+                controller.appendChild(contentCreatorWrapper);
                 $compile(contentCreatorWrapper)($rootScope);
             }
         }, 500);

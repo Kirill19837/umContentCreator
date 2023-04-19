@@ -6,19 +6,6 @@
             apiKey: ''
         };
 
-        $scope.passwordInputType = 'password';
-        $scope.passwordButtonLabel = 'Show';
-
-        $scope.togglePasswordVisibility = function () {
-            if ($scope.passwordInputType === 'password') {
-                $scope.passwordInputType = 'text';
-                $scope.passwordButtonLabel = 'Hide';
-            } else {
-                $scope.passwordInputType = 'password';
-                $scope.passwordButtonLabel = 'Show';
-            }
-        };
-        
         $scope.init = function () {
             $http.get(loadUrl).then(function (response) {
                 $scope.model = response.data;
