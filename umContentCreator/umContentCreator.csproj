@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-		<AssemblyVersion>1.0.2</AssemblyVersion>
-		<Version>1.0.2</Version>
-		<InformationalVersion>1.0.2</InformationalVersion>
+		<AssemblyVersion>1.0.3</AssemblyVersion>
+		<Version>1.0.3</Version>
+		<InformationalVersion>1.0.3</InformationalVersion>
 		<TargetFramework>net6.0</TargetFramework>
 		<ContentTargetFolders>.</ContentTargetFolders>
 		<Product>umContentCreator</Product>
@@ -13,7 +13,7 @@
 		<Company>$(Authors)</Company>
 		<Authors>OSKI solutions</Authors>
 		<Description>
-			Enhance your Umbraco CMS with AI-driven content generation. This package integrates the Chat GPT API, offering a seamless UI to create, manage, and customize AI-generated text for your text properties. Gain more control over content with options for max words, model behavior, and easy content appending or replacement.
+			Enhance your Umbraco CMS with AI-driven content generation. This package integrates both Chat GPT and DALL-E APIs, providing a seamless UI for creating, managing, and customizing AI-generated text and images for your text and media properties. Gain more control over content with options for max words, model behavior, and easy content appending or replacement, as well as image generation based on your input.
 		</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryUrl>https://github.com/Kirill19837/umContentCreator</RepositoryUrl>
@@ -21,7 +21,12 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageProjectUrl>https://oski.site/</PackageProjectUrl>
-		<PackageReleaseNotes></PackageReleaseNotes>
+		<PackageReleaseNotes>
+			1) Add possibility to generate images.
+			2) Change generation button's icon and styling of modal.
+			3) Resolve the issue of text not being generated when a page has multiple supported languages.
+			4) Resolve the issue of text being appended twice when generating text on a Block Grid page.
+		</PackageReleaseNotes>
     </PropertyGroup>
 
 	<ItemGroup>
@@ -48,7 +53,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="umContentCreator.Core" Version="1.0.1" />
+	  <PackageReference Include="umContentCreator.Core" Version="1.0.2" />
 	</ItemGroup>
 
 </Project>
