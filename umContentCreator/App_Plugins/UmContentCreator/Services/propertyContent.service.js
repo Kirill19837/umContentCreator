@@ -166,7 +166,7 @@ angular.module('umbraco').factory('propertyContentService',
                     </li>`;
 
                 const addButtonWrapper = mediaPickerThumbnailList.find('.add-wrapper');
-                debugger
+
                 if (addButtonWrapper.length) {
                     addButtonWrapper.css('display', 'none');
                 }

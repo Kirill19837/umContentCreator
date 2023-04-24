@@ -19,7 +19,7 @@ angular.module('umbraco').directive('umImageContentCreator', [function () {
                 '[ng-controller="Umbraco.PropertyEditors.MediaPickerController as vm"]'
             );
 
-            if (controller) {
+            if (controller && !controller.querySelector('.um-content-creator')) {
                 const contentCreatorWrapper = document.createElement('div');
                 contentCreatorWrapper.setAttribute('um-image-content-creator', '');
 

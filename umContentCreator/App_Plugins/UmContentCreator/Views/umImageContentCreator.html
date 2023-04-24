@@ -18,29 +18,35 @@
                     <div>
                         <label for="tokensSlider">Number of images to generate:</label>
                         <input type="range"
-                               id="tokensSlider"
+                               id="numberOfImages"
                                min="1"
                                max="4"
                                ng-model="configurationObject.generationModel.numberOfImages"
                                step="1">
                         <span>{{configurationObject.generationModel.numberOfImages}}</span>
                     </div>
-                    
+
+                    <div>
+                        <label for="imageSize">Image size:</label>
+                        <select id="imageSize" ng-model="configurationObject.generationModel.imageSize" ng-options="size as getSizeLable(size) for size in configurationObject.validSizes"></select>
+                    </div>
+
+
                     <div>
                         <label for="promptInput">What would you like to generate?</label>
-                        <textarea type="text" 
-                               id="promptInput"
-                               ng-model="configurationObject.generationModel.prompt" 
-                               placeholder="Enter image prompt..."></textarea>
+                        <textarea type="text"
+                                  id="promptInput"
+                                  ng-model="configurationObject.generationModel.prompt"
+                                  placeholder="Enter a prompt..."></textarea>
                     </div>
-                    
+
                     <div class="loading-container" ng-show="configurationObject.isGenerating">
                         <p>Generating</p><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
                     </div>
 
-                    <p class="generated-images-title" 
+                    <p class="generated-images-title"
                        ng-show="configurationObject.generatedImages.length !== 0 && !configurationObject.isGenerating">Generated images:</p>
-                    
+
                     <div ng-show="configurationObject.generatedImages && !configurationObject.isGenerating" class="generated-images">
                         <div class="generated-image-container" ng-repeat="image in configurationObject.generatedImages">
                             <img ng-src="{{image.url}}" ng-click="selectImage(image)" ng-class="{'selected': image.selected}">
@@ -50,16 +56,20 @@
                     <div class="loading-container" ng-show="configurationObject.isAddingMedia">
                         <p>Adding media</p><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
                     </div>
-                    
+
                     <div class="um-content-creator-buttons">
                         <button class="generate"
                                 ng-click="generateImages($event)"
-                                ng-disabled="!configurationObject.generationModel.prompt || configurationObject.isGenerating">{{configurationObject.generateButtonText}}</button>
-                        
+                                ng-disabled="!configurationObject.generationModel.prompt || configurationObject.isGenerating">
+                            {{configurationObject.generateButtonText}}
+                        </button>
+
                         <div class="buttons-right" ng-show="configurationObject.generatedImages.length !== 0">
                             <button class="replace"
                                     ng-click="updateContentOfProperty($event, true)"
-                                    ng-disabled="!configurationObject.selectedImage || configurationObject.isGenerating">Set image</button>
+                                    ng-disabled="!configurationObject.selectedImage || configurationObject.isGenerating">
+                                Set image
+                            </button>
                         </div>
                     </div>
                 </div>

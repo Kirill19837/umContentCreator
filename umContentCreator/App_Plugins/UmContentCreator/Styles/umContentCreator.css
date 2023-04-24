@@ -32,6 +32,9 @@
     line-height: 1.4;
     resize: none;
     border-radius: 5px;
+}
+
+.um-content-creator .content textarea {
     min-height: 100px;
 }
 

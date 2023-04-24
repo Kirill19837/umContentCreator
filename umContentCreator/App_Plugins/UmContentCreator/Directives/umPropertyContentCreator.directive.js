@@ -25,7 +25,7 @@
                 '[ng-controller="Umbraco.PropertyEditors.textboxController"], [ng-controller="Umbraco.PropertyEditors.textAreaController"], [ng-controller="Umbraco.PropertyEditors.RTEController"]'
             );
 
-            if (controller) {
+            if (controller && !controller.querySelector('.um-content-creator')) {
                 const contentCreatorWrapper = document.createElement('div');
                 const formElement = controller.querySelector('ng-form');
                 const rte = formElement.querySelector('.umb-rte-editor-con');

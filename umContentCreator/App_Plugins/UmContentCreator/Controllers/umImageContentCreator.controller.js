@@ -22,6 +22,14 @@ angular.module('umbraco').controller('UmImageContentCreatorController',
             $scope.configurationObject = umImageContentCreatorService.getInitialValues();
         }
 
+        $scope.getSizeLable = (sizeValue) => {
+            if (!$scope.configurationObject?.sizeLabels) {
+                return;
+            }
+
+            return $scope.configurationObject?.sizeLabels[sizeValue];
+        }
+
         $scope.generateImages = (event) => {
             event.stopPropagation();
             event.preventDefault();

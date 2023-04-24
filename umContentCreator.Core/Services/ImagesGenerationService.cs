@@ -3,11 +3,8 @@ using System.Text;
 using Newtonsoft.Json.Linq;
 using umContentCreator.Core.Interfaces;
 using umContentCreator.Core.Models;
-using Microsoft.AspNetCore.Mvc;
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.IO;
-using Umbraco.Cms.Core.Media;
-using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.PropertyEditors;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Core.Strings;
@@ -45,7 +42,7 @@ public class ImagesGenerationService : IImagesGenerationService
         {
             { "prompt", model.Prompt },
             { "num_images", model.NumberOfImages },
-            { "size", Constants.ImageSize },
+            { "size", $"{model.ImageSize}x{model.ImageSize}" },
             { "response_format", "url" }
         };
 

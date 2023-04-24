@@ -46,7 +46,7 @@
                         configuration.generateButtonText = 'Regenerate';
                     })
                     .catch(function (error) {
-                        notificationsService.error('Error', error);
+                        notificationsService.error('Error', error?.data?.detail ?? 'Failed to generate text.');
                         configuration.isGenerating = false;
                     });
 

@@ -3,8 +3,15 @@ angular.module('umbraco').factory('umImageContentCreatorService',
         const defaultConfiguration = {
             generationModel: {
                 prompt: '',
-                numberOfImages: 1
+                numberOfImages: 1,
+                imageSize: 256
             },
+            sizeLabels: {
+                256: '256 x 256',
+                512: '512 x 512',
+                1024: '1024 x 1024'
+            },
+            validSizes: [256, 512, 1024],
             isGenerating: false,
             isAddingMedia: false,
             generatedImages: [],
@@ -45,7 +52,7 @@ angular.module('umbraco').factory('umImageContentCreatorService',
                         })
                         .catch(function (error) {
                             configuration.isGenerating = false;
-                            reject(error);
+                            reject(error?.data?.detail ?? 'Failed to generate image.');
                         });
                 });
             },
