@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-		<AssemblyVersion>1.0.3</AssemblyVersion>
-		<Version>1.0.3</Version>
-		<InformationalVersion>1.0.3</InformationalVersion>
+		<AssemblyVersion>1.0.4</AssemblyVersion>
+		<Version>1.0.4</Version>
+		<InformationalVersion>1.0.4</InformationalVersion>
 		<TargetFramework>net6.0</TargetFramework>
 		<ContentTargetFolders>.</ContentTargetFolders>
 		<Product>umContentCreator</Product>
@@ -21,12 +21,7 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageProjectUrl>https://oski.site/</PackageProjectUrl>
-		<PackageReleaseNotes>
-			1) Add possibility to generate images.
-			2) Change generation button's icon and styling of modal.
-			3) Resolve the issue of text not being generated when a page has multiple supported languages.
-			4) Resolve the issue of text being appended twice when generating text on a Block Grid page.
-		</PackageReleaseNotes>
+		<PackageReleaseNotes>Add possibility to select size of generated images.</PackageReleaseNotes>
     </PropertyGroup>
 
 	<ItemGroup>
@@ -53,7 +48,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="umContentCreator.Core" Version="1.0.2" />
+	  <PackageReference Include="umContentCreator.Core" Version="1.0.3" />
 	</ItemGroup>
 
 </Project>

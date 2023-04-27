@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <AssemblyVersion>1.0.2</AssemblyVersion>
-        <Version>1.0.2</Version>
-        <InformationalVersion>1.0.2</InformationalVersion>
+        <AssemblyVersion>1.0.3</AssemblyVersion>
+        <Version>1.0.3</Version>
+        <InformationalVersion>1.0.3</InformationalVersion>
         <TargetFramework>net6.0</TargetFramework>
         <ContentTargetFolders>.</ContentTargetFolders>
         <Title>umContentCreator.Core</Title>
@@ -18,7 +18,7 @@
         <Description>This package contains the core logic of the umContentCreator package.</Description>
         <RepositoryUrl>https://github.com/Kirill19837/umContentCreator</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-		<PackageReleaseNotes>Add possibility to generate images.</PackageReleaseNotes>
+		<PackageReleaseNotes>Add possibility to select size of generated images.</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>

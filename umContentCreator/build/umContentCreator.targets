@@ -16,13 +16,5 @@
 			DestinationFiles="@(UmContentCreatorFiles->'$(MSBuildProjectDirectory)\App_Plugins\UmContentCreator\%(RecursiveDir)%(Filename)%(Extension)')"
 			SkipUnchangedFiles="true" />
 	</Target>
-
-	<Target Name="ClearUmContentCreatorFiles" BeforeTargets="Clean">
-		<ItemGroup>
-			<UmContentCreatorDir Include="$(MSBuildProjectDirectory)\App_Plugins\UmContentCreator\" />
-		</ItemGroup>
-		<Message Text="Clear old UmContentCreator data" Importance="high" />
-		<RemoveDir Directories="@(UmContentCreatorDir)" />
-	</Target>
 	
 </Project>

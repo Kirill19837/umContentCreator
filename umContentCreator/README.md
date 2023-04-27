@@ -33,7 +33,7 @@ Follow these steps to install umContentCreator:
 ### Image properties
 1) Navigate to any content page with image properties in the Umbraco CMS
 2) Click on the image generation button next to the desired image property
-3) A modal window will open, allowing you to enter a keyword or phrase for the image generation
+3) A modal window will open, allowing you to select number of images as well as their size and enter a prompt for the image generation
 4) Generate an image using the DALL-E
 5) Apply the generated image to the property
 
