@@ -9,13 +9,18 @@
                 }
         ],
         "javascript": [
-                "~/App_Plugins/UmContentCreator/Controllers/umContentCreator.controller.js",
+                "~/App_Plugins/UmContentCreator/Controllers/umPropertyContentCreator.controller.js",
+                "~/App_Plugins/UmContentCreator/Controllers/umImageContentCreator.controller.js",
                 "~/App_Plugins/UmContentCreator/Controllers/umContentCreatorSettings.controller.js",
                 "~/App_Plugins/UmContentCreator/Directives/umPropertyContentCreator.directive.js",
+                "~/App_Plugins/UmContentCreator/Directives/umImageContentCreator.directive.js",
                 "~/App_Plugins/UmContentCreator/Directives/uniqueId.directive.js",
                 "~/App_Plugins/UmContentCreator/Services/blockItems.service.js",
                 "~/App_Plugins/UmContentCreator/Services/nestedItems.service.js",
-                "~/App_Plugins/UmContentCreator/Services/umContentCreator.service.js",
+                "~/App_Plugins/UmContentCreator/Services/umPropertyContentCreator.service.js",
+                "~/App_Plugins/UmContentCreator/Services/umImageContentCreator.service.js",
+                "~/App_Plugins/UmContentCreator/Services/modal.service.js",
+                "~/App_Plugins/UmContentCreator/Services/propertyContent.service.js"
         ],
         "css": [
                 "~/App_Plugins/UmContentCreator/Styles/umContentCreator.css",

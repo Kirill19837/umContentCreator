@@ -12,5 +12,6 @@ public class UmContentCreatorComposer : IComposer
     {
         builder.Services.AddTransient<ISettingsService, SettingsService>();
         builder.Services.AddTransient<IChatGptService, ChatGptService>();
+        builder.Services.AddTransient<IImagesGenerationService, ImagesGenerationService>();
     }
 }

@@ -8,15 +8,51 @@ namespace umContentCreator.Core.Controllers;
 public class UmContentCreatorController : UmbracoApiController
 {
     private readonly IChatGptService _chatGptService;
+    private readonly IImagesGenerationService _imagesGenerationService;
     
-    public UmContentCreatorController(IChatGptService chatGptService)
+    public UmContentCreatorController(IChatGptService chatGptService, IImagesGenerationService imagesGenerationService)
     {
         _chatGptService = chatGptService;
+        _imagesGenerationService = imagesGenerationService;
     }
 
     [HttpPost]
     public async Task<IActionResult> GetGeneratedText([FromBody] GenerateTextModel model)
     {
-        return Ok(await _chatGptService.GenerateTextAsync(model));
+        try
+        {
+            return Ok(await _chatGptService.GenerateTextAsync(model));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Problem(ex.Message);
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> GetGeneratedImages([FromBody] GenerateImageModel model)
+    {
+        try
+        {
+            return Ok(await _imagesGenerationService.GenerateImageAsync(model));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Problem(ex.Message);
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateMediaItemFromUrl([FromBody] CreateMediaItemModel model)
+    {
+        try
+        {
+            var udi = await _imagesGenerationService.CreateMediaItemFromUrlAsync(model.Url, model.MediaItemName);
+            return Ok(udi.ToString());
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Problem(ex.Message);
+        }
     }
 }
