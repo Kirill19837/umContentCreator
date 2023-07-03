@@ -1,0 +1,14 @@
+﻿<div class="settings" ng-controller="UmContentCreatorSettingsController">
+    <div class="settings-container">
+        <h2>umContentCreator settings</h2>
+        <form class="settingsForm" name="settingsForm">
+            <div class="input">
+                <label for="apiKey">Enter your API key:</label>
+                <input id="apiKey" ng-model="model.apiKey" type="password" required>
+            </div>
+            <div>
+                <button class="submit" ng-click="save()" ng-disabled="!model.apiKey" type="button">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
