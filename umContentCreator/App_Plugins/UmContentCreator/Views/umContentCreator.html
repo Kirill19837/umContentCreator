@@ -1,0 +1,158 @@
+﻿<div ng-if="$ctrl.mode === 'image'">
+    <button ng-click="$ctrl.openModal($event)"
+            id="openModalButton"
+            class="open-modal"
+            unique-id="{{$id}}"
+            title="Create image using AI">
+        <img src="/App_Plugins/UmContentCreator/icon.png">
+    </button>
+    <div id="{{'myModal' + $id}}" class="um-content-creator-modal">
+        <div id="{{'myModalContent' + $id}}" class="um-content-creator-modal-content">
+            <div class="um-modal-title">
+                <p ng-bind-html="$ctrl.configurationObject.modalCaptionText"></p>
+                <span class="close-modal" ng-click="$ctrl.closeModal()">&times;</span>
+            </div>
+            <div class="um-content-creator">
+                <div class="content">
+
+                    <div>
+                        <label for="tokensSlider">Number of images to generate:</label>
+                        <input type="range"
+                               id="tokensSlider"
+                               min="1"
+                               max="4"
+                               ng-model="$ctrl.configurationObject.generationModel.numberOfImages"
+                               step="1"
+                               no-dirty-check>
+                        <span>{{$ctrl.configurationObject.generationModel.numberOfImages}}</span>
+                    </div>
+
+                    <div>
+                        <label for="promptInput">What would you like to generate?</label>
+                        <textarea type="text"
+                                  id="promptInput"
+                                  ng-model="$ctrl.configurationObject.generationModel.prompt"
+                                  placeholder="Enter image prompt..."
+                                  no-dirty-check>
+                        </textarea>
+                    </div>
+
+                    <div class="loading-container" ng-show="$ctrl.configurationObject.isGenerating">
+                        <p>Generating</p><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+                    </div>
+
+                    <p class="generated-images-title"
+                       ng-show="$ctrl.configurationObject.generatedImages.length !== 0 && !$ctrl.configurationObject.isGenerating">Generated images:</p>
+
+                    <div ng-show="$ctrl.configurationObject.generatedImages && !$ctrl.configurationObject.isGenerating" class="generated-images">
+                        <div class="generated-image-container" ng-repeat="image in $ctrl.configurationObject.generatedImages">
+                            <img ng-src="{{image.url}}" ng-click="$ctrl.selectImage(image)" ng-class="{'selected': image.selected}">
+                        </div>
+                    </div>
+
+                    <div class="loading-container" ng-show="$ctrl.configurationObject.isAddingMedia">
+                        <p>Adding media</p><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+                    </div>
+
+                    <div class="um-content-creator-buttons">
+                        <button class="generate"
+                                ng-click="$ctrl.generateImages($event)"
+                                ng-disabled="!$ctrl.configurationObject.generationModel.prompt || $ctrl.configurationObject.isGenerating">
+                            {{$ctrl.configurationObject.generateButtonText}}
+                        </button>
+
+                        <div class="buttons-right" ng-show="$ctrl.configurationObject.generatedImages.length !== 0">
+                            <button class="replace"
+                                    ng-click="$ctrl.updateContentOfImageProperty($event)"
+                                    ng-disabled="!$ctrl.configurationObject.selectedImage || $ctrl.configurationObject.isGenerating">
+                                Set image
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div ng-if="$ctrl.mode === 'text'">
+    <button ng-click="$ctrl.openModal($event)"
+            id="openModalButton"
+            class="open-modal"
+            unique-id="{{$id}}"
+            title="Create text using AI">
+        <img src="/App_Plugins/UmContentCreator/icon.png">
+    </button>
+    <div id="{{'myModal' + $id}}" class="um-content-creator-modal">
+        <div id="{{'myModalContent' + $id}}" class="um-content-creator-modal-content">
+            <div class="um-modal-title">
+                <p ng-bind-html="$ctrl.configurationObject.modalCaptionText"></p>
+                <span class="close-modal" ng-click="$ctrl.closeModal()">&times;</span>
+            </div>
+            <div class="um-content-creator">
+
+                <div class="content">
+                    <div>
+                        <label for="tokensSlider">Max words per response:</label>
+                        <input type="range"
+                               id="tokensSlider"
+                               min="5"
+                               max="2048"
+                               ng-model="$ctrl.configurationObject.generationModel.maxTokens"
+                               step="1">
+                        <span>{{$ctrl.configurationObject.generationModel.maxTokens}}</span>
+                    </div>
+
+                    <div>
+                        <label for="temperatureSlider">Model behaviour:</label>
+                        <input type="range"
+                               id="temperatureSlider"
+                               min="0.2"
+                               max="1.0"
+                               ng-model="$ctrl.configurationObject.generationModel.temperature"
+                               step="0.2">
+                        <span class="temperature-hint">{{$ctrl.getTemperatureLabel($ctrl.configurationObject.generationModel.temperature)}}</span>
+                    </div>
+
+                    <div>
+                        <label for="promptTextArea">What would you like to generate?</label>
+                        <textarea id="promptTextArea"
+                                  ng-model="$ctrl.configurationObject.generationModel.prompt"
+                                  rows="3" placeholder="Enter a prompt..."></textarea>
+                    </div>
+
+                    <div class="loading-container" ng-show="$ctrl.configurationObject.isGenerating">
+                        <p>Generating</p><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+                    </div>
+
+                    <div ng-show="$ctrl.configurationObject.generatedText && !$ctrl.configurationObject.isGenerating" class="generated-text">
+                        <label for="generatedText">Generated text:</label>
+                        <textarea id="generatedText"
+                                  ng-model="$ctrl.configurationObject.generatedText" rows="3"></textarea>
+                    </div>
+
+                    <div class="um-content-creator-buttons">
+                        <button class="generate"
+                                ng-click="$ctrl.generateText($event)"
+                                ng-disabled="!$ctrl.configurationObject.generationModel.prompt || $ctrl.configurationObject.isGenerating">
+                            {{$ctrl.configurationObject.generateButtonText}}
+                        </button>
+
+                        <div class="buttons-right" ng-show="$ctrl.configurationObject.generatedText">
+                            <button class="replace"
+                                    ng-click="$ctrl.updateContentOfTextProperty($event, true)"
+                                    ng-disabled="!$ctrl.configurationObject.generatedText">
+                                Replace
+                            </button>
+                            <button class="extend"
+                                    ng-show="$ctrl.configurationObject.propertyHasValue && $ctrl.configurationObject.generatedText"
+                                    ng-click="$ctrl.updateContentOfTextProperty($event, false)">
+                                Append
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
