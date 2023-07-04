@@ -28,6 +28,12 @@ angular.module('umbraco').directive('umImageContentCreator', [function () {
                 contentCreatorWrapper.style.border = 'none';
                 controller.appendChild(contentCreatorWrapper);
                 $compile(contentCreatorWrapper)($rootScope);
+
+                const mainFormController = angular.element('form[name=contentForm]').controller('form');
+
+                $timeout(() => {
+                    mainFormController.$setPristine();
+                });
             }
         }, 500);
     }

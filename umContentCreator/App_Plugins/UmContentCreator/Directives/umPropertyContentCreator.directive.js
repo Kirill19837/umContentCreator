@@ -34,12 +34,32 @@
                 if (rte) {
                     rte.style.width = '100%';
                 }
+
                 formElement.style.display = 'flex';
                 formElement.style.flexDirection = 'row';
                 formElement.style.gap = '10px';
 
                 formElement.appendChild(contentCreatorWrapper);
                 $compile(contentCreatorWrapper)($rootScope);
+
+                const mainFormController = angular.element('form[name=contentForm]').controller('form');
+                const formController = angular.element(formElement).controller('form');
+
+                if (!formController) {
+                    return;
+                }
+
+                const parentFormController = formController.$$parentForm;
+
+                if (!parentFormController) {
+                    return;
+                }
+
+                $timeout(() => {
+                    parentFormController.$setPristine();
+                    formController.$setPristine();
+                    mainFormController.$setPristine();
+                });
             }
         }, 500);
     }
