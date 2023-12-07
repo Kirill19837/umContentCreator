@@ -27,4 +27,6 @@ Follow these steps to install umContentCreator:
 6) If the property has existing content, you can choose to append the generated content. If not, click the "Replace" button to replace the content with the generated text
 
 ## Support
-For any issues or questions, please open a GitHub issue or contact the package author.
+Please open a GitHub issue or contact the package author for any issues or questions.
+##
+This code is provided under https://licenses.nuget.org/MIT license.
