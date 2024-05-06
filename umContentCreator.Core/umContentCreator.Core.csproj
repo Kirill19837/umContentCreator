@@ -22,6 +22,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+		<PackageReference Include="Azure.AI.OpenAI" Version="1.0.0-beta.16" />
         <PackageReference Include="MarkdownSharp" Version="2.0.5" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="System.Net.Http" Version="4.3.4" />

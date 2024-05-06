@@ -47,8 +47,8 @@ public class UmContentCreatorController : UmbracoApiController
     {
         try
         {
-            var udi = await _imagesGenerationService.CreateMediaItemFromUrlAsync(model.Url, model.MediaItemName);
-            return Ok(udi.ToString());
+            var guid = await _imagesGenerationService.CreateMediaItemFromUrlAsync(model.Url, model.MediaItemName);
+            return Ok(guid.ToString("D"));
         }
         catch (InvalidOperationException ex)
         {

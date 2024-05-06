@@ -6,6 +6,14 @@
                 <label for="apiKey">Enter your API key:</label>
                 <input id="apiKey" ng-model="model.apiKey" type="password" required>
             </div>
+            <div class="input">
+                <label for="textModel">Which text model do you want to use:</label>
+                <input id="textModel" ng-model="model.textModel" type="text" required>
+            </div>
+            <div class="input">
+                <label for="imageModel">Which image model do you want to use:</label>
+                <input id="imageModel" ng-model="model.imageModel" type="text" required>
+            </div>
             <div>
                 <button class="submit" ng-click="save()" ng-disabled="!model.apiKey" type="button">Save</button>
             </div>

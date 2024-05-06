@@ -3,7 +3,9 @@ angular.module('umbraco').factory('umImageContentCreatorService',
         const defaultConfiguration = {
             generationModel: {
                 prompt: '',
-                numberOfImages: 1
+                numberOfImages: 1,
+                ImageQuality: 'standard',
+                ImageSize: '512x512'
             },
             isGenerating: false,
             isAddingMedia: false,

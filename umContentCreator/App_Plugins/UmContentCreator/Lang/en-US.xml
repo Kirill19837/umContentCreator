@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<language>
-    <area alias="dashboardTabs">
-        <key alias="UmContentEditor">umContentCreator</key>
-    </area>
+<language alias="en" intName="English (UK)" localName="English (UK)" lcid="" culture="en-GB">
+	<area alias="dashboardTabs">
+		<key alias="UmContentEditor">umContentCreator</key>
+	</area>
 </language>

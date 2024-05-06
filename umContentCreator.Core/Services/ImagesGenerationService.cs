@@ -13,6 +13,8 @@ using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Core.Strings;
 using Umbraco.Extensions;
 using Constants = umContentCreator.Core.Models.Constants;
+using Azure;
+using Azure.AI.OpenAI;
 
 namespace umContentCreator.Core.Services;
 
@@ -39,35 +41,26 @@ public class ImagesGenerationService : IImagesGenerationService
 
     public async Task<string[]> GenerateImageAsync(GenerateImageModel model)
     {
-        var settingsModel = await _settingsService.LoadSettingsAsync();
-        
-        var content = new JObject
+        var settings = await _settingsService.LoadSettingsAsync();
+        OpenAIClient client = new OpenAIClient(settings.ApiKey);
+
+        var imageSize = new Azure.AI.OpenAI.ImageSize(model.ImageSize);
+        var imageQuality = new Azure.AI.OpenAI.ImageGenerationQuality(model.ImageQuality);
+        string ImageModel = (imageSize == ImageSize.Size1792x1024 || imageSize == ImageSize.Size1024x1792 || imageSize == ImageSize.Size1024x1024) ? "dall-e-3" : "dall-e-2";
+
+        Response<ImageGenerations> response = await client.GetImageGenerationsAsync(
+        new ImageGenerationOptions()
         {
-            { "prompt", model.Prompt },
-            { "num_images", model.NumberOfImages },
-            { "size", Constants.ImageSize },
-            { "response_format", "url" }
-        };
-
-        var request = new HttpRequestMessage(HttpMethod.Post, Constants.DalleApiUrl)
-        {
-            Content = new StringContent(content.ToString(), Encoding.UTF8, "application/json")
-        };
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", settingsModel.ApiKey);
-
-        var response = await _httpClient.SendAsync(request);
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new InvalidOperationException($"DALL-E API call failed: {response.ReasonPhrase}");
-        }
-
-        var responseContent = await response.Content.ReadAsStringAsync();
-        var responseObject = JObject.Parse(responseContent);
-
-        return responseObject["data"]?.Select(item => item["url"]?.ToString()).Where(imageUrl => !string.IsNullOrEmpty(imageUrl)).ToArray();
+            DeploymentName = ImageModel,
+            Prompt = model.Prompt,
+            Size = imageSize,
+            Quality = imageQuality,
+            ImageCount = model.NumberOfImages
+        });
+        return response.Value.Data?.Select(item => item.Url?.ToString()).Where(imageUrl => !string.IsNullOrEmpty(imageUrl)).ToArray();
     }
 
-    public async Task<Udi> CreateMediaItemFromUrlAsync(string url, string mediaItemName)
+    public async Task<Guid> CreateMediaItemFromUrlAsync(string url, string mediaItemName)
     {
         var imageBytes = await DownloadImageAsync(url);
 
@@ -83,13 +76,13 @@ public class ImagesGenerationService : IImagesGenerationService
         }
 
         var folderId = HandleMediaWithTheSameNames(mediaItemName, parentFolder.Id) ?? parentFolder.Id;
-        
+
         var media = _mediaService.CreateMedia(mediaItemName, folderId, "Image");
-        
+
         media.SetValue(_mediaFileManager, _mediaUrlGeneratorCollection, _shortStringHelper, _contentTypeBaseServiceProvider, Umbraco.Cms.Core.Constants.Conventions.Media.File, $"{mediaItemName}.png", imageStream);
 
         _mediaService.Save(media);
-        return Udi.Create(Umbraco.Cms.Core.Constants.UdiEntityType.Media, media.Key);
+        return media.Key;
     }
 
     private async Task<byte[]> DownloadImageAsync(string url)
@@ -116,7 +109,7 @@ public class ImagesGenerationService : IImagesGenerationService
         {
             return null;
         }
-        
+
         if (folderForMediaWithTheSameName == null)
         {
             folderForMediaWithTheSameName = _mediaService.CreateMedia($"{mediaItemName} images", parentFolderId, "Folder");

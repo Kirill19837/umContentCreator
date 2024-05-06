@@ -1,5 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using System.Text;
+using Azure.AI.OpenAI;
+using Azure;
 using MarkdownSharp;
 using Newtonsoft.Json;
 using umContentCreator.Core.Interfaces;
@@ -22,34 +24,24 @@ public class ChatGptService : IChatGptService
     public async Task<string> GenerateTextAsync(GenerateTextModel model)
     {
         var settings = await _settingsService.LoadSettingsAsync();
-        _httpClient.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", settings.ApiKey);
-
-        var requestBody = JsonConvert.SerializeObject(new
+        OpenAIClient client = new OpenAIClient(settings.ApiKey);
+        var chatCompletionsOptions = new ChatCompletionsOptions()
         {
-            model = Constants.ChatGptModel,
-            prompt = model.Prompt,
-            temperature = model.Temperature,
-            max_tokens = model.MaxTokens
-        });
-
-        var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
-        var response = await _httpClient.PostAsync(Constants.ChatGptApiUrl, content);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new InvalidOperationException("Failed to generate text from ChatGPT API.");
-        }
+            DeploymentName = settings.TextModel,
+            Messages =
+                {
+                    new ChatRequestSystemMessage(model.Prompt)
+                }
+        };
+        Response<ChatCompletions> response = await client.GetChatCompletionsAsync(chatCompletionsOptions);
+        ChatResponseMessage responseMessage = response.Value.Choices[0].Message;
         var returnedText = await GetGeneratedText(response);
-
         return model.PropertyEditorAlias is TinyMce ? new Markdown().Transform(returnedText) : returnedText;
     }
 
-    private static async Task<string> GetGeneratedText(HttpResponseMessage response)
+    private static async Task<string> GetGeneratedText(Response<ChatCompletions> response)
     {
-        var responseContent = await response.Content.ReadAsStringAsync();
-        var responseObject = JsonConvert.DeserializeObject<dynamic>(responseContent);
-        var returnedText = responseObject.choices[0].text.ToString();
-        return returnedText;
+        var returnedText = response.Value.Choices[0].Message;
+        return returnedText.Content.Trim('"');
     }
 }
