@@ -16,7 +16,7 @@ namespace umContentCreator.Core.Handles
             var task = _settingsService.LoadSettingsAsync();
             var settings = task.Result;
 
-            notification.ServerVariables.Add("CWContentCreator", new
+            notification.ServerVariables.Add("umContentCreator", new
             {
                 ApiKey = settings.ApiKey
             });
