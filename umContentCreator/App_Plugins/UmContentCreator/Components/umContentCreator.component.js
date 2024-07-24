@@ -36,7 +36,7 @@ angular.module("umbraco").component("umContentCreator", {
             this.configurationObject = null;
 
             this.$onInit = () => {
-                var apiKey = Umbraco.Sys.ServerVariables["CWContentCreator"]["ApiKey"];
+                var apiKey = Umbraco.Sys.ServerVariables["umContentCreator"]["ApiKey"];
 
                 if (apiKey == null || apiKey == '' || this.umbProperty == null || this.umbProperty.property == null || !allowedEditors.includes(this.umbProperty.property.editor)) {
                     this.remove();
