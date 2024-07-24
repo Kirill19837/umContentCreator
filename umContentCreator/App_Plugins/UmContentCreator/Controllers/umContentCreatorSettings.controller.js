@@ -3,7 +3,8 @@
         const saveUrl = "/Umbraco/Api/Configuration/SaveSettings";
         const loadUrl = "/Umbraco/Api/Configuration/LoadSettings";
         $scope.model = {
-            apiKey: ''
+            apiKey: '',
+            textModel: ''
         };
 
         $scope.init = function () {
@@ -17,7 +18,7 @@
         $scope.save = function () {
             $http.post(saveUrl, $scope.model).then(function () {
                 notificationsService.success("Success", "Settings saved successfully.");
-                const mainFormController = angular.element('form[name=contentForm]').controller('form');
+                const mainFormController = angular.element('form[name=settingsForm]').controller('form');
 
                 $timeout(() => {
                     mainFormController.$setPristine();

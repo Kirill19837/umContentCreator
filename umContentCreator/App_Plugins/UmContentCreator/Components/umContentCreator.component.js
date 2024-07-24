@@ -12,6 +12,7 @@ angular.module("umbraco").component("umContentCreator", {
         'editorState',
         'notificationsService',
         '$timeout',
+        '$scope',
         function umContentCreatorController(
             $element,
             umPropertyContentCreatorService,
@@ -20,11 +21,13 @@ angular.module("umbraco").component("umContentCreator", {
             contentResource,
             editorState,
             notificationsService,
-            $timeout
+            $timeout,
+            $scope
         ) {
 
             const allowedEditors = [
                 'Umbraco.MediaPicker',
+                'Umbraco.MediaPicker3',
                 'Umbraco.TextBox',
                 'Umbraco.TinyMCE',
                 'Umbraco.TextArea'
@@ -33,7 +36,9 @@ angular.module("umbraco").component("umContentCreator", {
             this.configurationObject = null;
 
             this.$onInit = () => {
-                if (this.umbProperty == null || this.umbProperty.property == null || !allowedEditors.includes(this.umbProperty.property.editor)) {
+                var apiKey = Umbraco.Sys.ServerVariables["umContentCreator"]["ApiKey"];
+
+                if (apiKey == null || apiKey == '' || this.umbProperty == null || this.umbProperty.property == null || !allowedEditors.includes(this.umbProperty.property.editor)) {
                     this.remove();
                     return;
                 }
@@ -47,16 +52,29 @@ angular.module("umbraco").component("umContentCreator", {
                 $timeout(() => {
                     const $controls = $element.prev(".controls");
                     const $propertyEditor = $controls.find("ng-form");
+                    const $mediaCard = $controls.find(".umb-media-card-grid");
                     const imagePreview = $controls.find('[ng-controller="Umbraco.PropertyEditors.MediaPickerController as vm"]');
 
                     if (imagePreview.length > 0) {
-                        imagePreview.append($element);
+                        $element.detach().appendTo(imagePreview);
+                        //imagePreview.append($element);
                         imagePreview.css('display', 'flex');
                         imagePreview.css('gap', '5px');
                     } else if ($propertyEditor.length > 0) {
-                        $propertyEditor.append($element);
-                        $propertyEditor.css('display', 'flex');
-                        $propertyEditor.css('gap', '10px');
+                        //$propertyEditor.append($element);
+                        if (this.mode == "image") {
+                            $element.detach().appendTo($mediaCard);
+                            $mediaCard.css('display', 'flex');
+                            $mediaCard.css('gap', '10px');
+                        }
+                        else {
+                            $element.detach().appendTo($propertyEditor);
+                            if (this.umbProperty.property.editor == allowedEditors[3]) {
+                                $element.addClass("text-ai-button");
+                            }
+                            $propertyEditor.css('display', 'flex');
+                            $propertyEditor.css('gap', '10px');
+                        }
                     }
                 }, 200);
             }
@@ -66,7 +84,7 @@ angular.module("umbraco").component("umContentCreator", {
             }
 
             this.setMode = () => {
-                if (this.umbProperty.property.editor === 'Umbraco.MediaPicker') {
+                if (this.umbProperty.property.editor === 'Umbraco.MediaPicker' || this.umbProperty.property.editor === 'Umbraco.MediaPicker3') {
                     this.mode = 'image';
                 } else {
                     this.mode = 'text';
@@ -179,15 +197,20 @@ angular.module("umbraco").component("umContentCreator", {
                 this.configurationObject.isAddingMedia = true;
 
                 try {
-                    const udi = await umImageContentCreatorService.uploadImageFromUrl(selectedImageUrl, this.configurationObject.generationModel.prompt);
+                    const imagekey = await umImageContentCreatorService.uploadImageFromUrl(selectedImageUrl, this.configurationObject.generationModel.prompt);
                     this.configurationObject.isAddingMedia = false;
-                    this.umbProperty.property.value = udi;
-                    const $controls = $element.closest(".umb-property-editor");
-                    const image = $controls.find('img').first();
-                    image.attr('src', selectedImageUrl);
+
+                    var mediaEntry = {};
+                    mediaEntry.key = String.CreateGuid();
+                    mediaEntry.mediaKey = imagekey; //
+                    mediaEntry.crops = [];
+                    mediaEntry.focalPoint = {
+                        left: 0.5,
+                        top: 0.5
+                    };
+                    this.umbProperty.property.value = [mediaEntry];
                     await contentResource.save(editorState.current, false, []);
                     notificationsService.success('Content created successfully.');
-                    this.configurationObject = umImageContentCreatorService.getInitialValues();
                     this.closeModal();
                     this.setFormPrestine();
                 } catch (e) {

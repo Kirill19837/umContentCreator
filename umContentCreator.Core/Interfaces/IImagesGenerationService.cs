@@ -7,5 +7,5 @@ namespace umContentCreator.Core.Interfaces;
 public interface IImagesGenerationService
 {
     Task<string[]> GenerateImageAsync(GenerateImageModel model);
-    Task<Udi> CreateMediaItemFromUrlAsync(string url, string mediaItemName);
+    Task<Guid> CreateMediaItemFromUrlAsync(string url, string mediaItemName);
 }

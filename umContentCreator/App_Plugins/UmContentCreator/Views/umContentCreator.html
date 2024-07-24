@@ -36,7 +36,27 @@
                                   no-dirty-check>
                         </textarea>
                     </div>
-
+                    <div>
+                        <label for="qualityselect">Select image quality (HD is more expensive)</label>
+                        <select id="qualityselect"
+                                ng-model="$ctrl.configurationObject.generationModel.ImageQuality"
+                                no-dirty-check>
+                            <option value="standard">Standard</option>
+                            <option value="hd">HD</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="imagesize">Select image size (Larger is more expensive)</label>
+                        <select id="imagesize"
+                                ng-model="$ctrl.configurationObject.generationModel.ImageSize"
+                                no-dirty-check>
+                            <option value="256x256">256x256 (dall-e-2)</option>
+                            <option value="512x512">512x512 (dall-e-2)</option>
+                            <option value="1024x1024">1024x1024 (dall-e-3)</option>
+                            <option value="1024x1792">1024x1792 (dall-e-3)</option>
+                            <option value="1792x1024">1792x1024 (dall-e-3)</option>
+                        </select>
+                    </div>
                     <div class="loading-container" ng-show="$ctrl.configurationObject.isGenerating">
                         <p>Generating</p><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
                     </div>
