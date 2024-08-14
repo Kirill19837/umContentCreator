@@ -31,7 +31,7 @@ Follow these steps to install umContentCreator:
 - [OSKI solutions OU](https://oski.site/)
 - [Kyrylo Osadchuk on LinkedIn](https://www.linkedin.com/in/kyrylo-o/)
 - [Kyrylo Osadchuk on GitHub](https://github.com/Kirill19837)
-- [umContentCretor overview](https://oski.site/articles-and-news/umcontentcreator-ai-powered-umbraco-plugin-for-text-generation/)
+- [umContentCreator overview](https://oski.site/articles-and-news/umcontentcreator-ai-powered-umbraco-plugin-for-text-generation/)
   
 ##
 This code is provided under https://licenses.nuget.org/MIT license.
