@@ -26,7 +26,12 @@ Follow these steps to install umContentCreator:
 5) Modify the generated text as needed
 6) If the property has existing content, you can choose to append the generated content. If not, click the "Replace" button to replace the content with the generated text
 
-## Support
-Please open a GitHub issue or contact the package author for any issues or questions.
+### Please connect with me (Kyrylo Osadchuk) if you need assistance with AI or [Umbraco consulting services](https://oski.site/technologies/umbraco/):
+
+- [OSKI solutions OU](https://oski.site/)
+- [Kyrylo Osadchuk on LinkedIn](https://www.linkedin.com/in/kyrylo-o/)
+- [Kyrylo Osadchuk on GitHub](https://github.com/Kirill19837)
+- [umContentCretor overview](https://oski.site/articles-and-news/umcontentcreator-ai-powered-umbraco-plugin-for-text-generation/)
+  
 ##
 This code is provided under https://licenses.nuget.org/MIT license.
