@@ -1,0 +1,14 @@
+{
+  "name": "UmContentCreator",
+  "id": "umContentCreator.package",
+  "version": "0.1.0",
+  "allowTelemetry": true,
+  "extensions": [
+      {
+          "name": "UmContentCreator.entrypoint",
+          "alias": "UmContentCreator.EntryPoint",
+          "type": "backofficeEntryPoint",
+          "js": "/App_Plugins/umContentCreator/umContentCreator.js"
+      }
+  ]
+}

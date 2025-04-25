@@ -1,17 +1,26 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.DependencyInjection;
+using Umbraco.Cms.Core.Events;
+using Umbraco.Cms.Core.Notifications;
+using umContentCreator.Core.Handles;
 using umContentCreator.Core.Interfaces;
 using umContentCreator.Core.Services;
 
-namespace umContentCreator.Core.Composers;
-
-public class UmContentCreatorComposer : IComposer
+namespace umContentCreator.Composers
 {
-    public void Compose(IUmbracoBuilder builder)
+    public class umContentCreatorComposer : IComposer
     {
-        builder.Services.AddTransient<ISettingsService, SettingsService>();
-        builder.Services.AddTransient<IChatGptService, ChatGptService>();
-        builder.Services.AddTransient<IImagesGenerationService, ImagesGenerationService>();
+        public void Compose(IUmbracoBuilder builder)
+        {
+            builder.Services.AddScoped<ISettingsService, SettingsService>();
+            builder.Services.AddScoped<IChatGptService, ChatGptService>();
+            builder.Services.AddScoped<IImagesGenerationService, ImagesGenerationService>();
+            builder.Services.AddScoped<IDocumentTypeConfigurationService, DocumentTypeConfigurationService>();
+            builder.Services.AddScoped<INotificationHandler<ServerVariablesParsingNotification>, ServerVariablesParsingNotificationHandler>();
+        }
+
+
+
     }
 }

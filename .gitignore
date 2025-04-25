@@ -4,6 +4,7 @@
 
 /.vs
 /Test
+node_modules/
 /umContentCreator.Core/bin
 /umContentCreator.Core/obj
 /umContentCreator/bin

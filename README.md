@@ -15,7 +15,7 @@ Follow these steps to install umContentCreator:
 
 1) Download the package from NuGet
 2) Install the package in your Umbraco project
-3) Configure the Chat GPT API token in the "umContentCreator" configuration tab in the Content section
+3) Configure the Chat GPT API token, Stability API, Google Search index key, Google APi key. in the "umContentCreator" configuration tab in the Content section
 4) Start generating content for your text properties
 
 ## Usage

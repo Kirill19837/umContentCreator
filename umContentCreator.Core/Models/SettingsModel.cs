@@ -2,5 +2,9 @@
 
 public class SettingsModel
 {
-    public string ApiKey { get; set; }
+    public string TextApiKey { get; set; }
+    public string TextModel { get; set; }
+    public string GoogleApiKey { get; set; }
+    public string CustomSearchEngineKey { get; set; }
+    public string StabilityApiKey { get; set; }
 }

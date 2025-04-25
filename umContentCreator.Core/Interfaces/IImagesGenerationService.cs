@@ -1,11 +1,11 @@
-using umContentCreator.Core.Models;
-using Microsoft.AspNetCore.Mvc;
-using Umbraco.Cms.Core;
-
+using umContentCreator.Core.Models.CreateImage;
+using umContentCreator.Core.Models.CreateImage.GenerateImage;
+using umContentCreator.Core.Models.CreateImage.SearchImage;
 namespace umContentCreator.Core.Interfaces;
 
 public interface IImagesGenerationService
 {
     Task<string[]> GenerateImageAsync(GenerateImageModel model);
-    Task<Udi> CreateMediaItemFromUrlAsync(string url, string mediaItemName);
+    Task<MediaModel> CreateMediaItemFromUrlAsync(CreateMediaItemModel model);
+    Task<SearchImageResultModel> SearchImageAsync(SearchImageModel model);
 }
