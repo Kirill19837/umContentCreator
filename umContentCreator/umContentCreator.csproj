@@ -10,7 +10,7 @@
     <PackageId>umContentCreator</PackageId>
     <Product>umContentCreator</Product>
     <Title>umContentCreator</Title>
-    <Version>15.0.0</Version>
+    <Version>15.0.1</Version>
     <Authors>OSKI solutions</Authors>
     <PackageProjectUrl>https://oski.site/</PackageProjectUrl>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -22,10 +22,10 @@ This package integrates both Chat GPT and Stability APIs, providing a seamless U
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryType>git</RepositoryType>
     <PackageTags>umbraco-marketplace</PackageTags>
-    <PackageReleaseNotes>1)Added support for Umbraco 15
-2)Added support for the Stability API for image generation
-3)Added the ability to add images from Google
-4)Updated the design of modal windows</PackageReleaseNotes>
+    <PackageReleaseNotes>
+		Two new fields have been added to the package settings in Umbraco, under the ImageGenerate tab:
+		Google Search Region and Google Search Rights.
+	</PackageReleaseNotes>
   </PropertyGroup>
   
   <ItemGroup>

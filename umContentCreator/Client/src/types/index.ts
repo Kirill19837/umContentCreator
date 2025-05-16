@@ -81,6 +81,8 @@ export type SettingModel = {
   textModel: string;
   googleApiKey: string;
   customSearchEngineKey: string;
+  googleSearchRegion: string;
+  googleSearchRights: string;
   stabilityApiKey: string;
 };
 

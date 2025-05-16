@@ -159,7 +159,17 @@ public class ImagesGenerationService : IImagesGenerationService
 
         int startIndex = (model.CurrentPage - 1) * model.PageSize + 1;
 
-        var url = $"{Constants.GoogleSearchApiUrl}?q={model.Query}&cx={settings.CustomSearchEngineKey}&key={settings.GoogleApiKey}&searchType=image&start={startIndex}&num={model.PageSize}&safe=active&filter=1&rights=cc_publicdomain";
+        var url = $"{Constants.GoogleSearchApiUrl}?num={model.PageSize}&q={model.Query}&filter=1&safe=active&searchType=image&cx={settings.CustomSearchEngineKey}&key={settings.GoogleApiKey}&start={startIndex}";
+
+        if (!string.IsNullOrWhiteSpace(settings.GoogleSearchRegion))
+        {
+            url += $"&cr=country{settings.GoogleSearchRegion}&gl={settings.GoogleSearchRegion.ToLower()}";
+        }
+
+        if (!string.IsNullOrWhiteSpace(settings.GoogleSearchRights))
+        {
+            url += $"&rights={settings.GoogleSearchRights}";
+        }
 
         var response = await _httpClient.GetAsync(url);
 

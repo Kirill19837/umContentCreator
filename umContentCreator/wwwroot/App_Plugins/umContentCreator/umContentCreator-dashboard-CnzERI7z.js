@@ -1,19 +1,19 @@
 import { UmbElementMixin as b } from "@umbraco-cms/backoffice/element-api";
-import { LitElement as v, html as u, css as f, property as n, state as h, customElement as m } from "@umbraco-cms/backoffice/external/lit";
-import { UMB_NOTIFICATION_CONTEXT as T } from "@umbraco-cms/backoffice/notification";
-import { g as w, p as y } from "./api-utils-CmgJo3fQ.js";
-var x = Object.defineProperty, S = Object.getOwnPropertyDescriptor, g = (t) => {
+import { LitElement as v, html as u, css as S, property as o, state as h, customElement as f } from "@umbraco-cms/backoffice/external/lit";
+import { UMB_NOTIFICATION_CONTEXT as m } from "@umbraco-cms/backoffice/notification";
+import { g as T, p as c } from "./api-utils-CmgJo3fQ.js";
+var w = Object.defineProperty, x = Object.getOwnPropertyDescriptor, y = (t) => {
   throw TypeError(t);
 }, s = (t, e, i, r) => {
-  for (var o = r > 1 ? void 0 : r ? S(e, i) : e, p = t.length - 1, c; p >= 0; p--)
-    (c = t[p]) && (o = (r ? c(e, i, o) : c(o)) || o);
-  return r && o && x(e, i, o), o;
-}, d = (t, e, i) => e.has(t) || g("Cannot " + i), K = (t, e, i) => (d(t, e, "read from private field"), e.get(t)), A = (t, e, i) => e.has(t) ? g("Cannot add the same private member more than once") : e instanceof WeakSet ? e.add(t) : e.set(t, i), C = (t, e, i, r) => (d(t, e, "write to private field"), e.set(t, i), i), l;
+  for (var n = r > 1 ? void 0 : r ? x(e, i) : e, p = t.length - 1, g; p >= 0; p--)
+    (g = t[p]) && (n = (r ? g(e, i, n) : g(n)) || n);
+  return r && n && w(e, i, n), n;
+}, d = (t, e, i) => e.has(t) || y("Cannot " + i), K = (t, e, i) => (d(t, e, "read from private field"), e.get(t)), A = (t, e, i) => e.has(t) ? y("Cannot add the same private member more than once") : e instanceof WeakSet ? e.add(t) : e.set(t, i), $ = (t, e, i, r) => (d(t, e, "write to private field"), e.set(t, i), i), l;
 let a = class extends b(
   v
 ) {
   constructor() {
-    super(), A(this, l), this.textApiKey = "", this.textModel = "", this.googleApiKey = "", this.customSearchEngineKey = "", this.stabilityApiKey = "", this.aliases = "", this.showTextSectionTab = !0, this.showImageSectionTab = !1, this.showConfigurationDataTypes = !1, this.toggleTabs = (t) => {
+    super(), A(this, l), this.textApiKey = "", this.textModel = "", this.googleApiKey = "", this.googleSearchRegion = "", this.googleSearchRights = "", this.customSearchEngineKey = "", this.stabilityApiKey = "", this.aliases = "", this.showTextSectionTab = !0, this.showImageSectionTab = !1, this.showConfigurationDataTypes = !1, this.toggleTabs = (t) => {
       switch (t) {
         case "search":
           this.showImageSectionTab = !1, this.showTextSectionTab = !0, this.showConfigurationDataTypes = !1;
@@ -24,8 +24,8 @@ let a = class extends b(
         case "configurationDataTypes":
           this.showImageSectionTab = !1, this.showTextSectionTab = !1, this.showConfigurationDataTypes = !0;
       }
-    }, this.consumeContext(T, (t) => {
-      C(this, l, t);
+    }, this.consumeContext(m, (t) => {
+      $(this, l, t);
     });
   }
   connectedCallback() {
@@ -34,19 +34,21 @@ let a = class extends b(
   async loadSettings() {
     const t = "/api/configuration/loadSettings";
     try {
-      const e = await w(t);
-      this.textApiKey = e.textApiKey || "", this.textModel = e.textModel || "", this.googleApiKey = e.googleApiKey || "", this.customSearchEngineKey = e.customSearchEngineKey || "", this.stabilityApiKey = e.stabilityApiKey || "";
+      const e = await T(t);
+      this.textApiKey = e.textApiKey || "", this.textModel = e.textModel || "", this.googleApiKey = e.googleApiKey || "", this.googleSearchRegion = e.googleSearchRegion || "", this.googleSearchRights = e.googleSearchRights || "", this.customSearchEngineKey = e.customSearchEngineKey || "", this.stabilityApiKey = e.stabilityApiKey || "";
     } catch {
       this.showNotification("Error loading settings", "danger");
     }
   }
   async saveSettings() {
     try {
-      await y("/api/configuration/saveSettings", {
+      await c("/api/configuration/saveSettings", {
         textApiKey: this.textApiKey,
         textModel: this.textModel,
         googleApiKey: this.googleApiKey,
         customSearchEngineKey: this.customSearchEngineKey,
+        googleSearchRegion: this.googleSearchRegion,
+        googleSearchRights: this.googleSearchRights,
         stabilityApiKey: this.stabilityApiKey
       }), this.showNotification("Settings saved successfully", "positive");
     } catch {
@@ -63,7 +65,7 @@ let a = class extends b(
   }
   async updateAliases() {
     try {
-      await y("/api/configurationDocumentType/updateAliases", {
+      await c("/api/configurationDocumentType/updateAliases", {
         aliases: this.aliases
       }), this.showNotification(
         "Types have been successfully updated.",
@@ -167,6 +169,20 @@ let a = class extends b(
               @input=${(t) => this.customSearchEngineKey = t.target.value}
             >
             </uui-input-password>
+            <uui-label for="apiKey">Google Search Region</uui-label>
+            <uui-input
+              label="Google Search Region"
+             .value=${this.googleSearchRegion}
+              @input=${(t) => this.googleSearchRegion = t.target.value}
+            >
+            </uui-input>
+            <uui-label for="apiKey">Google Search Rights</uui-label>
+            <uui-input
+              label="Google Search Rights"
+             .value=${this.googleSearchRights}
+              @input=${(t) => this.googleSearchRights = t.target.value}
+            >
+            </uui-input>
             <uui-label for="apiKey">Stability API key:</uui-label>
             <uui-input-password
               id="apiKey"
@@ -212,7 +228,7 @@ let a = class extends b(
   }
 };
 l = /* @__PURE__ */ new WeakMap();
-a.styles = f`
+a.styles = S`
     .settings-container {
       width: 100%;
       max-width: 600px;
@@ -239,22 +255,28 @@ a.styles = f`
     }
   `;
 s([
-  n({ type: String })
+  o({ type: String })
 ], a.prototype, "textApiKey", 2);
 s([
-  n({ type: String })
+  o({ type: String })
 ], a.prototype, "textModel", 2);
 s([
-  n({ type: String })
+  o({ type: String })
 ], a.prototype, "googleApiKey", 2);
 s([
-  n({ type: String })
+  o({ type: String })
+], a.prototype, "googleSearchRegion", 2);
+s([
+  o({ type: String })
+], a.prototype, "googleSearchRights", 2);
+s([
+  o({ type: String })
 ], a.prototype, "customSearchEngineKey", 2);
 s([
-  n({ type: String })
+  o({ type: String })
 ], a.prototype, "stabilityApiKey", 2);
 s([
-  n({ type: String })
+  o({ type: String })
 ], a.prototype, "aliases", 2);
 s([
   h()
@@ -266,9 +288,9 @@ s([
   h()
 ], a.prototype, "showConfigurationDataTypes", 2);
 a = s([
-  m("um-content-creator-dashboard")
+  f("um-content-creator-dashboard")
 ], a);
 export {
   a as default
 };
-//# sourceMappingURL=umContentCreator-dashboard-Co_H6eg9.js.map
+//# sourceMappingURL=umContentCreator-dashboard-CnzERI7z.js.map

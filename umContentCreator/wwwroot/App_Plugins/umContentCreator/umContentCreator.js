@@ -4,7 +4,7 @@ const t = [
     alias: "umContentCreator.dashboard",
     name: "umContentCreator-dashboard",
     elementName: "um-content-creator-dashboard",
-    js: () => import("./umContentCreator-dashboard-Co_H6eg9.js"),
+    js: () => import("./umContentCreator-dashboard-CnzERI7z.js"),
     weight: 30,
     meta: {
       label: "umContentCreator",

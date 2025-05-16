@@ -3,5 +3,7 @@
     "TextModel": "****",
     "GoogleApiKey": "****",
     "CustomSearchEngineKey": "****",
+    "GoogleSearchRegion": "***",
+    "GoogleSearchRights": "***",
     "StabilityApiKey": "****"
 }

@@ -59,6 +59,8 @@ export default class UmContentCreatorDashboardElement extends UmbElementMixin(
   @property({ type: String }) textApiKey = "";
   @property({ type: String }) textModel = "";
   @property({ type: String }) googleApiKey = "";
+  @property({ type: String}) googleSearchRegion = "";
+  @property({ type: String}) googleSearchRights = "";
   @property({ type: String }) customSearchEngineKey = "";
   @property({ type: String }) stabilityApiKey = "";
   @property({ type: String }) aliases = "";
@@ -84,12 +86,16 @@ export default class UmContentCreatorDashboardElement extends UmbElementMixin(
         textApiKey: string;
         textModel: string;
         googleApiKey: string;
+        googleSearchRegion: string;
+        googleSearchRights: string;
         customSearchEngineKey: string;
         stabilityApiKey: string;
       }>(loadUrl);
       this.textApiKey = result.textApiKey || "";
       this.textModel = result.textModel || "";
       this.googleApiKey = result.googleApiKey || "";
+      this.googleSearchRegion = result.googleSearchRegion || "";
+      this.googleSearchRights = result.googleSearchRights || "";
       this.customSearchEngineKey = result.customSearchEngineKey || "";
       this.stabilityApiKey = result.stabilityApiKey || "";
     } catch (error) {
@@ -104,6 +110,8 @@ export default class UmContentCreatorDashboardElement extends UmbElementMixin(
         textModel: this.textModel,
         googleApiKey: this.googleApiKey,
         customSearchEngineKey: this.customSearchEngineKey,
+        googleSearchRegion: this.googleSearchRegion,
+        googleSearchRights: this.googleSearchRights,
         stabilityApiKey: this.stabilityApiKey,
       });
 
@@ -240,6 +248,22 @@ export default class UmContentCreatorDashboardElement extends UmbElementMixin(
                 ).value)}
             >
             </uui-input-password>
+            <uui-label for="apiKey">Google Search Region</uui-label>
+            <uui-input
+              label="Google Search Region"
+             .value=${this.googleSearchRegion}
+              @input=${(e: Event) =>
+                (this.googleSearchRegion = (e.target as HTMLInputElement).value)}
+            >
+            </uui-input>
+            <uui-label for="apiKey">Google Search Rights</uui-label>
+            <uui-input
+              label="Google Search Rights"
+             .value=${this.googleSearchRights}
+              @input=${(e: Event) =>
+                (this.googleSearchRights = (e.target as HTMLInputElement).value)}
+            >
+            </uui-input>
             <uui-label for="apiKey">Stability API key:</uui-label>
             <uui-input-password
               id="apiKey"

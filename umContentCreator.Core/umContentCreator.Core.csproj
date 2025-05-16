@@ -5,18 +5,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>15.0.00</Version>
+    <Version>15.0.1</Version>
     <PackageId>umContentCreator.Core</PackageId>
     <Title>umContentCreator.Core</Title>
     <Authors>OSKI solutions</Authors>
     <Product>umContentCreator.Core</Product>
-    <AssemblyVersion>15.0.00</AssemblyVersion>
+    <AssemblyVersion>15.0.1</AssemblyVersion>
     <Description>This package contains the core logic of the umContentCreator package.</Description>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/Kirill19837/umContentCreator</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>1) Added support for Umbraco 15
-2) Add possibility to generate images.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added customizations for google search URL</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
