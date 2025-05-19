@@ -1,36 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <AssemblyVersion>1.0.2</AssemblyVersion>
-        <Version>1.0.2</Version>
-        <InformationalVersion>1.0.2</InformationalVersion>
-        <TargetFramework>net6.0</TargetFramework>
-        <ContentTargetFolders>.</ContentTargetFolders>
-        <Title>umContentCreator.Core</Title>
-        <Product>umContentCreator.Core</Product>
-        <PackageId>umContentCreator.Core</PackageId>
-        <Company>$(Authors)</Company>
-        <Authors>OSKI solutions</Authors>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <TargetFramework>net6.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>disable</Nullable>
-        <Description>This package contains the core logic of the umContentCreator package.</Description>
-        <RepositoryUrl>https://github.com/Kirill19837/umContentCreator</RepositoryUrl>
-        <RepositoryType>git</RepositoryType>
-		<PackageReleaseNotes>Add possibility to generate images.</PackageReleaseNotes>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>15.0.1</Version>
+    <PackageId>umContentCreator.Core</PackageId>
+    <Title>umContentCreator.Core</Title>
+    <Authors>OSKI solutions</Authors>
+    <Product>umContentCreator.Core</Product>
+    <AssemblyVersion>15.0.1</AssemblyVersion>
+    <Description>This package contains the core logic of the umContentCreator package.</Description>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/Kirill19837/umContentCreator</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>Added customizations for google search URL</PackageReleaseNotes>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="MarkdownSharp" Version="2.0.5" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="System.Net.Http" Version="4.3.4" />
-        <PackageReference Include="Umbraco.Cms.Core" Version="10.0.0" />
-        <PackageReference Include="Umbraco.Cms.Web.Common" Version="10.0.0" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Umbraco.Cms.Core" Version="15.3.1" />
+    <PackageReference Include="Umbraco.Cms.Web.Common" Version="15.3.1" />
+	<PackageReference Include="Azure.AI.OpenAI" Version="1.0.0-beta.17" />
+	<PackageReference Include="MarkdownSharp" Version="2.0.5" />
+	<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="MyPackages" />
-    </ItemGroup>
+  <ItemGroup>
+    <Folder Include="MyPackages\" />
+  </ItemGroup>
 
 </Project>

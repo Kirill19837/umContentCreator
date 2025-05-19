@@ -1,13 +1,14 @@
 ﻿# umContentCreator
 
 umContentCreator is a package for Umbraco that enhances your content editing experience by integrating AI-powered content generation for text and image properties.
-It allows users to generate content using the Chat GPT API for text and the DALL-E API for image generation, providing a seamless and user-friendly interface for managing AI-generated text and images.
+It allows users to generate content using the Chat GPT API for text and the Stability API or Google Search for image generation, providing a seamless and user-friendly interface for managing AI-generated text and images.
 
 ## Features
-* Adds a content generation button next to each text and image property in the Umbraco CMS
+* Adds new datatypes for text and images that have the ability to generate text or image
 * Configuration tab in the Content section for setting API tokens
 * Customizable content generation options, including max words per response and model behavior for text properties
-* Image generation based on user-defined keywords or phrases using DALL-E API
+* Image generation based on user-defined keywords or phrases using Stability API
+* Ability to add images from google search
 * Ability to modify generated text before applying to the property
 * Append or replace content in text properties with generated content
 
@@ -17,8 +18,10 @@ Follow these steps to install umContentCreator:
 
 1) Download the package from NuGet
 2) Install the package in your Umbraco project
-3) Configure the Chat GPT API token in the "umContentCreator" configuration tab in the Content section
-4) Start generating content for your text and image properties
+3) Configure the Chat GPT API token in the "umContentCreator > Text Generate" configuration tab in the Content section
+4) Configure the Google API key, Custom Search Engine Key, Stability API key in the "umContentCreator > Image Generate" configuration tab in the Content section
+5) Replace necessary fields in datatypes with new datatypes for text or images
+6) Start generating content for your text and image properties
 
 ## Usage
 
@@ -32,9 +35,10 @@ Follow these steps to install umContentCreator:
 
 ### Image properties
 1) Navigate to any content page with image properties in the Umbraco CMS
+2) Select the Search or Generate tab
 2) Click on the image generation button next to the desired image property
 3) A modal window will open, allowing you to enter a keyword or phrase for the image generation
-4) Generate an image using the DALL-E
+4) Generate an image using the Stability API or Google Search
 5) Apply the generated image to the property
 
 ## Support

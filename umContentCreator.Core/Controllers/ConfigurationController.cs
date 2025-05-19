@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Umbraco.Cms.Web.Common.Controllers;
 using umContentCreator.Core.Interfaces;
 using umContentCreator.Core.Models;
 
 namespace umContentCreator.Core.Controllers;
 
-public class ConfigurationController : UmbracoApiController
+[ApiController]
+[Route("api/configuration")]
+public class ConfigurationController : Controller
 {
     private readonly ISettingsService _settingsService;
 
@@ -14,13 +15,13 @@ public class ConfigurationController : UmbracoApiController
         _settingsService = settingsService;
     }
 
-    [HttpGet]
+    [HttpGet("loadSettings")]
     public async Task<IActionResult> LoadSettings()
     {
         return Ok(await _settingsService.LoadSettingsAsync());
     }
 
-    [HttpPost]
+    [HttpPost("saveSettings")]
     public async Task<IActionResult> SaveSettings([FromBody] SettingsModel settings)
     {
         await _settingsService.SaveSettingsAsync(settings);

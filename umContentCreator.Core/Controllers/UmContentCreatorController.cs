@@ -1,11 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Umbraco.Cms.Web.Common.Controllers;
+using StackExchange.Profiling.Internal;
 using umContentCreator.Core.Interfaces;
 using umContentCreator.Core.Models;
+using umContentCreator.Core.Models.CreateImage;
+using umContentCreator.Core.Models.CreateImage.GenerateImage;
+using umContentCreator.Core.Models.CreateImage.SearchImage;
 
 namespace umContentCreator.Core.Controllers;
 
-public class UmContentCreatorController : UmbracoApiController
+[ApiController]
+[Route("api/umContentCreator")]
+public class UmContentCreatorController : Controller
 {
     private readonly IChatGptService _chatGptService;
     private readonly IImagesGenerationService _imagesGenerationService;
@@ -16,7 +21,7 @@ public class UmContentCreatorController : UmbracoApiController
         _imagesGenerationService = imagesGenerationService;
     }
 
-    [HttpPost]
+    [HttpPost("getGeneratedText")]
     public async Task<IActionResult> GetGeneratedText([FromBody] GenerateTextModel model)
     {
         try
@@ -29,7 +34,7 @@ public class UmContentCreatorController : UmbracoApiController
         }
     }
 
-    [HttpPost]
+    [HttpPost("getGenerateImage")]
     public async Task<IActionResult> GetGeneratedImages([FromBody] GenerateImageModel model)
     {
         try
@@ -42,13 +47,26 @@ public class UmContentCreatorController : UmbracoApiController
         }
     }
 
-    [HttpPost]
+    [HttpPost("createMediaItemFromUrl")]
     public async Task<IActionResult> CreateMediaItemFromUrl([FromBody] CreateMediaItemModel model)
     {
         try
         {
-            var udi = await _imagesGenerationService.CreateMediaItemFromUrlAsync(model.Url, model.MediaItemName);
-            return Ok(udi.ToString());
+            var guid = await _imagesGenerationService.CreateMediaItemFromUrlAsync(model);
+            return Ok(guid);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Problem(ex.Message);
+        }
+    }
+
+    [HttpPost("searchImage")] 
+    public async Task<IActionResult> SearchImage([FromBody] SearchImageModel model)
+    {
+        try
+        {
+            return Ok(await _imagesGenerationService.SearchImageAsync(model));
         }
         catch (InvalidOperationException ex)
         {

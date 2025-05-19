@@ -1,59 +1,59 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <StaticWebAssetBasePath>/</StaticWebAssetBasePath>
+  </PropertyGroup>
 
-    <PropertyGroup>
-		<AssemblyVersion>1.0.3</AssemblyVersion>
-		<Version>1.0.3</Version>
-		<InformationalVersion>1.0.3</InformationalVersion>
-		<TargetFramework>net6.0</TargetFramework>
-		<ContentTargetFolders>.</ContentTargetFolders>
-		<Product>umContentCreator</Product>
-		<PackageId>umContentCreator</PackageId>
-		<Title>umContentCreator</Title>
-		<PackageTags>umbraco-marketplace</PackageTags>
-		<Company>$(Authors)</Company>
-		<Authors>OSKI solutions</Authors>
-		<Description>
-			Enhance your Umbraco CMS with AI-driven content generation. This package integrates both Chat GPT and DALL-E APIs, providing a seamless UI for creating, managing, and customizing AI-generated text and images for your text and media properties. Gain more control over content with options for max words, model behavior, and easy content appending or replacement, as well as image generation based on your input.
-		</Description>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<RepositoryUrl>https://github.com/Kirill19837/umContentCreator</RepositoryUrl>
-		<RepositoryType>git</RepositoryType>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageIcon>logo.png</PackageIcon>
-		<PackageProjectUrl>https://oski.site/</PackageProjectUrl>
-		<PackageReleaseNotes>
-			1) Add possibility to generate images.
-			2) Change generation button's icon and styling of modal.
-			3) Resolve the issue of text not being generated when a page has multiple supported languages.
-			4) Resolve the issue of text being appended twice when generating text on a Block Grid page.
-		</PackageReleaseNotes>
-    </PropertyGroup>
+  <PropertyGroup>
+    <PackageId>umContentCreator</PackageId>
+    <Product>umContentCreator</Product>
+    <Title>umContentCreator</Title>
+    <Version>15.0.1</Version>
+    <Authors>OSKI solutions</Authors>
+    <PackageProjectUrl>https://oski.site/</PackageProjectUrl>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/Kirill19837/umContentCreator</RepositoryUrl>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Description>Enhance your Umbraco CMS with AI-driven content generation.
+This package integrates both Chat GPT and Stability APIs, providing a seamless UI for creating, managing, and customizing AI-generated text and images for your text and media properties. Gain more control over content with options for max words, model behavior, and easy content appending or replacement. In addition to image generation based on your input, the package also allows you to easily insert images from Google Search, giving you even more flexibility and creative power.</Description>
+    <PackageIcon>logo.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>umbraco-marketplace</PackageTags>
+    <PackageReleaseNotes>
+		Two new fields have been added to the package settings in Umbraco, under the ImageGenerate tab:
+		Google Search Region and Google Search Rights.
+	</PackageReleaseNotes>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <!-- Dont include the client folder as part of packaging nuget build -->
+    <Content Remove="Client\**" />
 
-	<ItemGroup>
-		
-		<Content Include="App_Plugins\UmContentCreator\**">
-			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
-		</Content>
-		
-		<None Include="build\**">
-			<Pack>true</Pack>
-			<PackagePath>buildTransitive</PackagePath>
-		</None>
-		
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="MyPackages" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Include="logo.png" Pack="true" PackPath="\" />
-		<None Include="README.md" Pack="true" PackagePath="" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <PackageReference Include="umContentCreator.Core" Version="1.0.2" />
-	</ItemGroup>
-
+    <!-- However make the Umbraco-package.json included for dotnet pack or nuget package and visible to the solution -->
+    <None Include="Client\public\umbraco-package.json" Pack="false" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\umContentCreator.Core\umContentCreator.Core.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Update="logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="MyPackages\" />
+    <Folder Include="wwwroot\App_Plugins\" />
+  </ItemGroup>
+  
 </Project>
