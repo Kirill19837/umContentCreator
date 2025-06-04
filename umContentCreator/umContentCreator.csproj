@@ -10,7 +10,7 @@
     <PackageId>umContentCreator</PackageId>
     <Product>umContentCreator</Product>
     <Title>umContentCreator</Title>
-    <Version>15.0.1</Version>
+    <Version>15.0.2</Version>
     <Authors>OSKI solutions</Authors>
     <PackageProjectUrl>https://oski.site/</PackageProjectUrl>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>

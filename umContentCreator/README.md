@@ -24,8 +24,6 @@ Follow these steps to install umContentCreator:
 6) Start generating content for your text and image properties
 
 ## Usage
-
-### Text properties
 1) Navigate to any content page with text properties in the Umbraco CMS
 2) Click on the content generation button next to the desired text property
 3) A modal window will open, allowing you to customize the content generation options
@@ -41,5 +39,12 @@ Follow these steps to install umContentCreator:
 4) Generate an image using the Stability API or Google Search
 5) Apply the generated image to the property
 
-## Support
-For any issues or questions, please open a GitHub issue or contact the package author.
+### Please connect with me (Kyrylo Osadchuk) if you need assistance with AI or [Umbraco consulting services](https://oski.site/technologies/umbraco/):
+
+- [OSKI solutions OU](https://oski.site/)
+- [Kyrylo Osadchuk on LinkedIn](https://www.linkedin.com/in/kyrylo-o/)
+- [Kyrylo Osadchuk on GitHub](https://github.com/Kirill19837)
+- [umContentCreator overview](https://oski.site/articles-and-news/umcontentcreator-ai-powered-umbraco-plugin-for-text-generation/)
+  
+##
+This code is provided under https://licenses.nuget.org/MIT license.
