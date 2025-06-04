@@ -1,0 +1,25 @@
+{
+  "$schema": "https://marketplace.umbraco.com/umbraco-marketplace-schema.json",
+  "AuthorDetails": {
+    "Name": "OSKI solutions",
+    "Description": "We are an experienced and fully remote team of developers from Eastern Europe who are passionate about beautiful and simple web solutions.",
+    "Url": "https://oski.site/",
+    "ImageUrl": "https://oski.site/media/jynmenh5/logo-header.svg?anchor=center&mode=crop&width=500"
+  },
+  "Title": "umContentCreator",
+  "Description": "",
+  "Category": "Editor Tools",
+  "LicenseTypes": [ "Free" ],
+  "PackageType": "Package",
+  "Tags": [ 
+  "umbraco", 
+  "artificial-intelligence", 
+  "chatgpt", 
+  "stability-ai", 
+  "google-search", 
+  "image-search", 
+  "backoffice", 
+  "media-management", 
+  "automation" 
+]
+}
