@@ -84,6 +84,9 @@ export type SettingModel = {
   googleSearchRegion: string;
   googleSearchRights: string;
   stabilityApiKey: string;
+  stabilityApiModel: string;
+  preferredImageModel: string;
+  aspectRatio: string;
 };
 
 export type TextGenerateModalData = {

@@ -8,5 +8,6 @@ public static class Constants
     public static string FolderName = "Generated Images";
     public static string ImageSize = "256x256";
     public static string GoogleSearchApiUrl = "https://customsearch.googleapis.com/customsearch/v1";
-    public static string StabilityApiUrl = "https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image";
+    public static string StabilityApiUrlv1 = "https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image";
+    public static string StabilityApiUrlv2 = "https://api.stability.ai/v2beta/stable-image/generate";
 }

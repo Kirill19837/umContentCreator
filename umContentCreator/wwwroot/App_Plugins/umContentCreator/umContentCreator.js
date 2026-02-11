@@ -4,7 +4,7 @@ const t = [
     alias: "umContentCreator.dashboard",
     name: "umContentCreator-dashboard",
     elementName: "um-content-creator-dashboard",
-    js: () => import("./umContentCreator-dashboard-CnzERI7z.js"),
+    js: () => import("./umContentCreator-dashboard-XzTBy7Cg.js"),
     weight: 30,
     meta: {
       label: "umContentCreator",
@@ -18,13 +18,13 @@ const t = [
       }
     ]
   }
-], a = [...t], r = [
+], a = [...t], o = [
   {
     type: "propertyEditorUi",
     alias: "Umb.PropertyEditorUi.OskiTextBox",
     name: "Oski Text Box - Generate Text",
     elementName: "custom-text-box",
-    js: () => import("./custom-text-box-DR4CbSD6.js"),
+    js: () => import("./custom-text-box-CPWgI4sD.js"),
     meta: {
       label: "Oski Text Box - Generate Text",
       icon: "icon-edit",
@@ -36,7 +36,7 @@ const t = [
     type: "propertyEditorUi",
     alias: "Umb.PropertyEditorUi.OskiMediaPicker",
     name: "OSKI Media Picker - Generate Image",
-    js: () => import("./custom-mediaPicker-C2N0l5N0.js"),
+    js: () => import("./custom-mediaPicker-7gBceqXA.js"),
     meta: {
       label: "OSKI Media Picker - Generate Image",
       propertyEditorSchemaAlias: "Umbraco.MediaPicker3",
@@ -76,7 +76,7 @@ const t = [
     alias: "Umb.PropertyEditorUi.OskiTexArea",
     name: "Oski Text Area - Generate Text",
     elementName: "custom-text-area",
-    js: () => import("./custom-text-area-DsYCSMOr.js"),
+    js: () => import("./custom-text-area-DpjMNvQa.js"),
     meta: {
       label: "Oski Text Area - Generate Text",
       icon: "icon-edit",
@@ -84,7 +84,7 @@ const t = [
       propertyEditorSchemaAlias: "Umbraco.TextArea"
     }
   }
-], o = [...r], i = [
+], r = [...o], i = [
   {
     type: "modal",
     alias: "Text.Generate.Modal",
@@ -95,33 +95,30 @@ const t = [
     type: "modal",
     alias: "Image.Generate.Modal",
     name: "Image Generate Modal",
-    element: () => import("./ImageGenerateModalElement-CQL-BGQ1.js")
+    element: () => import("./ImageGenerateModalElement-CZhfKbA1.js")
   }
 ], n = [...i], s = [
   {
-    type: "tinyMcePlugin",
-    alias: "myrteplugin",
-    name: "My TinyMCE Plugin",
-    js: () => import("./rte-generate-text-CIxNAw8V.js"),
+    type: "tiptapToolbarExtension",
+    kind: "button",
+    alias: "Tiptap.Toolbar.MyTiptapPlugin",
+    name: "My Tiptap Plugin",
+    js: () => import("./rte-generate-text-6XoHfxf3.js"),
     meta: {
-      toolbar: [
-        {
-          alias: "generateTextButton",
-          label: "Generate Text RTE",
-          icon: "code-sample"
-        }
-      ]
+      alias: "generateTextButton",
+      label: "Generate Text RTE",
+      icon: "icon-binarycode"
     }
   }
-], m = [...s], p = (l, e) => {
+], m = [...s], l = (p, e) => {
   e.registerMany([
     ...a,
-    ...o,
+    ...r,
     ...n,
     ...m
   ]);
 };
 export {
-  p as onInit
+  l as onInit
 };
 //# sourceMappingURL=umContentCreator.js.map

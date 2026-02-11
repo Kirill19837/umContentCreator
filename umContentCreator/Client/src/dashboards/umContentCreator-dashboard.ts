@@ -62,7 +62,10 @@ export default class UmContentCreatorDashboardElement extends UmbElementMixin(
   @property({ type: String}) googleSearchRegion = "";
   @property({ type: String}) googleSearchRights = "";
   @property({ type: String }) customSearchEngineKey = "";
+  @property({ type: String }) preferredImageModel = "v1";
   @property({ type: String }) stabilityApiKey = "";
+  @property({ type: String }) stabilityApiModel = "";
+  @property({ type: String }) aspectRatio = "1:1";
   @property({ type: String }) aliases = "";
 
   @state()
@@ -90,6 +93,9 @@ export default class UmContentCreatorDashboardElement extends UmbElementMixin(
         googleSearchRights: string;
         customSearchEngineKey: string;
         stabilityApiKey: string;
+        stabilityApiModel: string;
+        preferredImageModel: string;
+        aspectRatio: string;
       }>(loadUrl);
       this.textApiKey = result.textApiKey || "";
       this.textModel = result.textModel || "";
@@ -98,6 +104,9 @@ export default class UmContentCreatorDashboardElement extends UmbElementMixin(
       this.googleSearchRights = result.googleSearchRights || "";
       this.customSearchEngineKey = result.customSearchEngineKey || "";
       this.stabilityApiKey = result.stabilityApiKey || "";
+      this.stabilityApiModel = result.stabilityApiModel || "";
+      this.preferredImageModel = result.preferredImageModel || "v1";
+      this.aspectRatio = result.aspectRatio || "1:1";
     } catch (error) {
       this.showNotification("Error loading settings", "danger");
     }
@@ -113,6 +122,9 @@ export default class UmContentCreatorDashboardElement extends UmbElementMixin(
         googleSearchRegion: this.googleSearchRegion,
         googleSearchRights: this.googleSearchRights,
         stabilityApiKey: this.stabilityApiKey,
+        stabilityApiModel: this.stabilityApiModel,
+        preferredImageModel: this.preferredImageModel,
+        aspectRatio: this.aspectRatio,
       });
 
       this.showNotification("Settings saved successfully", "positive");
@@ -274,6 +286,46 @@ export default class UmContentCreatorDashboardElement extends UmbElementMixin(
                 (this.stabilityApiKey = (e.target as HTMLInputElement).value)}
             >
             </uui-input-password>
+             <uui-label id="image-api-version-label">Stability API Version</uui-label>
+            <uui-radio-group
+              name="imageApiVersion"
+              .value=${this.preferredImageModel}
+              @change=${(e: Event) =>
+                (this.preferredImageModel = (e.target as HTMLInputElement).value as "v1" | "v2")}
+              aria-labelledby="image-api-version-label"
+            >
+              <uui-radio
+                value="v1"
+                label="Stability v1"
+              ></uui-radio>
+              <uui-radio 
+                value="v2"
+                label="Stability v2"
+              ></uui-radio>
+            </uui-radio-group>
+        ${this.preferredImageModel === "v2"
+          ? html`
+              <uui-label for="stabilityModel">Stability API Model:</uui-label>
+              <uui-input
+                id="stabilityModel"
+                label="Stability API Model"
+                .value=${this.stabilityApiModel}
+                @input=${(e: Event) =>
+                  (this.stabilityApiModel = (e.target as HTMLInputElement).value)}
+              ></uui-input>
+
+              <!-- Aspect Ratio Select -->
+              <uui-label for="aspectRatio">Aspect Ratio</uui-label>
+              <uui-input
+                    id="aspectRatio"
+                    label="Aspect Ratio"
+                    .value=${this.aspectRatio}
+                    @input=${(e: Event) =>
+                      (this.aspectRatio = (e.target as HTMLInputElement).value)}
+                  >
+                  </uui-input>
+            `
+          : null}
           </div>
           <uui-button
             style="width: 100%; --uui-button-content-align: center;"

@@ -146,26 +146,35 @@ export default class ImageGenerateModalElement
     this.prompt = target.value;
   }
 
-  private async _generateImage() {
-    try {
-      const result = await postJson<GenerateImageModel, string[]>(
-        "/api/umContentCreator/getGenerateImage",
-        {
-          prompt: this.prompt,
-          negativePrompts: this.modalContext?.data.negativePrompts,
-          numberOfImages: this.modalContext?.data.numberGenerate,
-        }
-      );
+private async _generateImage() {
+  if (this.isGenerating) return;
 
-      this.images = result;
-      this.showNotification("The image was successfully generated", "positive");
-    } catch (error) {
-      this.showNotification(
-        "Generation error while creating media: " + error,
-        "danger"
-      );
-    }
+  this.isGenerating = true;
+
+  try {
+    const result = await postJson<GenerateImageModel, string[]>(
+      "/api/umContentCreator/getGenerateImage",
+      {
+        prompt: this.prompt,
+        negativePrompts: this.modalContext?.data.negativePrompts,
+        numberOfImages: this.modalContext?.data.numberGenerate,
+      }
+    );
+
+    this.images = result;
+    this.showNotification(
+      "The image was successfully generated",
+      "positive"
+    );
+  } catch (error) {
+    this.showNotification(
+      "Generation error while creating media: " + error,
+      "danger"
+    );
+  } finally {
+    this.isGenerating = false;
   }
+}
 
   showNotification(message: string, type: UmbNotificationColor) {
     this.#notificationContext?.peek(type, {
@@ -296,7 +305,8 @@ export default class ImageGenerateModalElement
                 pristine="" 
                 label=${this.images.length > 0 ? "Regenerate" : "Generate"}
                 look="primary"
-                ?disabled=${!this.prompt}
+                state=${this.isGenerating ? "waiting" : undefined}
+                ?disabled=${!this.prompt || this.isGenerating}
                 @click=${this._generateImage}></uui-button>
                 ${
                   this.images.length && this.selectedImage >= 0

@@ -1,27 +1,19 @@
 ﻿using System.Net.Http.Headers;
 using System.Text;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.IO;
-using Umbraco.Cms.Core.Media;
-using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.PropertyEditors;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Core.Strings;
-using Umbraco.Extensions;
-using Constants = umContentCreator.Core.Models.Constants;
-using Azure;
-using Azure.AI.OpenAI;
 using Umbraco.Cms.Web.Common;
-using Umbraco.Cms.Core.Models.PublishedContent;
-using static Umbraco.Cms.Core.Constants.Conventions;
-using Newtonsoft.Json;
+using Umbraco.Extensions;
 using umContentCreator.Core.Interfaces;
-using umContentCreator.Core.Models.CreateImage.GenerateImage;
+using umContentCreator.Core.Models;
 using umContentCreator.Core.Models.CreateImage;
+using umContentCreator.Core.Models.CreateImage.GenerateImage;
 using umContentCreator.Core.Models.CreateImage.SearchImage;
-using NPoco.fastJSON;
+using Constants = umContentCreator.Core.Models.Constants;
 
 namespace umContentCreator.Core.Services;
 
@@ -58,59 +50,12 @@ public class ImagesGenerationService : IImagesGenerationService
     public async Task<string[]> GenerateImageAsync(GenerateImageModel model)
     {
         var settings = await _settingsService.LoadSettingsAsync();
-        
-        ConfigureHttpClient(settings.StabilityApiKey);
 
-
-        //var filePath = Path.Combine(Directory.GetCurrentDirectory(), "test.json");
-        //if (!System.IO.File.Exists(filePath))
-        //{
-        //    throw new FileNotFoundException($"Файл не найден: {filePath}");
-        //}
-        //var json = await System.IO.File.ReadAllTextAsync(filePath);
-        //var response = JsonConvert.DeserializeObject<ArtifactsModel>(json);
-        //var test = response.Artifacts.FirstOrDefault();
-
-        var promptObject = new
+        return settings.PreferredImageModel switch
         {
-            cfg_scale = 7,
-            clip_guidance_preset = "FAST_BLUE",
-            height = 1024,
-            width = 1024,
-            sampler = "K_DPM_2_ANCESTRAL",
-            samples = model.NumberOfImages,
-            steps = 30,
-            text_prompts = new[]
-            {
-            new { text = "illustration " + model.Prompt, weight = 1 },
-            new { text = model.NegativePrompts , weight = -1 },
-            }
+            "v2" => await GenerateImageAsyncV2(settings, model),
+            _ => await GenerateImageAsyncV1(settings, model)
         };
-
-        var content = CreateJsonContent(promptObject);
-
-        try
-        {
-            var response = await _httpClient.PostAsync(Constants.StabilityApiUrl, content);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                return Array.Empty<string>();
-            }
-
-            var responseData = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<ArtifactsModel>(responseData);
-
-            return result?.Artifacts?
-                .Where(x => string.Equals(x.FinishReason, "success", StringComparison.OrdinalIgnoreCase))
-                .Select(x => x.Base64)
-                .ToArray()
-                ?? Array.Empty<string>();
-        }
-        catch (Exception ex)
-        {
-            return Array.Empty<string>();
-        }
     }
 
     public async Task<MediaModel> CreateMediaItemFromUrlAsync(CreateMediaItemModel model)
@@ -209,6 +154,124 @@ public class ImagesGenerationService : IImagesGenerationService
         return await response.Content.ReadAsByteArrayAsync();
     }
 
+    // Stability API v1
+    private async Task<string[]> GenerateImageAsyncV1(SettingsModel settings, GenerateImageModel model)
+    {
+        _httpClient.DefaultRequestHeaders.Clear();
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", settings.StabilityApiKey);
+        _httpClient.DefaultRequestHeaders.Accept.Clear();
+        _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+        var promptObject = new
+        {
+            cfg_scale = 7,
+            clip_guidance_preset = "FAST_BLUE",
+            height = 1024,
+            width = 1024,
+            sampler = "K_DPM_2_ANCESTRAL",
+            samples = model.NumberOfImages,
+            steps = 30,
+            text_prompts = new[]
+            {
+            new { text = "illustration " + model.Prompt, weight = 1 },
+            new { text = model.NegativePrompts , weight = -1 },
+            }
+        };
+
+        var content = CreateJsonContent(promptObject);
+
+        try
+        {
+            var response = await _httpClient.PostAsync(Constants.StabilityApiUrlv1, content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return Array.Empty<string>();
+            }
+
+            var responseData = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<ArtifactsModel>(responseData);
+
+            return result?.Artifacts?
+                .Where(x => string.Equals(x.FinishReason, "success", StringComparison.OrdinalIgnoreCase))
+                .Select(x => x.Base64)
+                .ToArray()
+                ?? Array.Empty<string>();
+        }
+        catch (Exception ex)
+        {
+            return Array.Empty<string>();
+        }
+    }
+
+    // Stability API v2
+    private async Task<string[]> GenerateImageAsyncV2(SettingsModel settings, GenerateImageModel model)
+    {
+        _httpClient.DefaultRequestHeaders.Clear();
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", settings.StabilityApiKey);
+        _httpClient.DefaultRequestHeaders.Accept.Clear();
+        _httpClient.DefaultRequestHeaders.Add("Accept", "image/*");
+
+        var results = new List<string>();
+
+        for (int i = 0; i < model.NumberOfImages; i++)
+        {
+            using var content = new MultipartFormDataContent();
+
+            // PROMPT
+            var promptContent = new StringContent($"illustration {model.Prompt}");
+            promptContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+            {
+                Name = "\"prompt\""
+            };
+            content.Add(promptContent);
+
+            // NEGATIVE PROMPT
+            if (!string.IsNullOrWhiteSpace(model.NegativePrompts))
+            {
+                var negativePromptContent = new StringContent(model.NegativePrompts);
+                negativePromptContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                {
+                    Name = "\"negative_prompt\""
+                };
+                content.Add(negativePromptContent);
+            }
+
+            // ASPECT RATIO
+            var aspectRatioContent = new StringContent(settings.AspectRatio);
+            aspectRatioContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+            {
+                Name = "\"aspect_ratio\""
+            };
+            content.Add(aspectRatioContent);
+
+            // OUTPUT FORMAT
+            var outputFormatContent = new StringContent("webp");
+            outputFormatContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+            {
+                Name = "\"output_format\""
+            };
+            content.Add(outputFormatContent);
+
+            var response = await _httpClient.PostAsync(
+                $"{Constants.StabilityApiUrlv2}/{settings.StabilityApiModel}",
+                content
+            );
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorBody = await response.Content.ReadAsStringAsync();
+                throw new Exception(
+                    $"Stability error {(int)response.StatusCode}: {errorBody}"
+                );
+            }
+
+            var bytes = await response.Content.ReadAsByteArrayAsync();
+            results.Add(Convert.ToBase64String(bytes));
+        }
+
+        return results.ToArray();
+    }
     private int? HandleMediaWithTheSameNames(string mediaItemName, int parentFolderId)
     {
         var mediaFromFolder = _mediaService.GetPagedChildren(parentFolderId, 0, int.MaxValue, out _).ToList();
@@ -234,14 +297,6 @@ public class ImagesGenerationService : IImagesGenerationService
         }
 
         return folderForMediaWithTheSameName.Id;
-    }
-
-    private void ConfigureHttpClient(string apiKey)
-    {
-        _httpClient.DefaultRequestHeaders.Clear();
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
-        _httpClient.DefaultRequestHeaders.Accept.Clear();
-        _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }
 
     private StringContent CreateJsonContent(object data)

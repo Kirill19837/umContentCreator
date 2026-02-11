@@ -1,19 +1,19 @@
 import { UmbElementMixin as b } from "@umbraco-cms/backoffice/element-api";
-import { LitElement as v, html as u, css as S, property as o, state as h, customElement as f } from "@umbraco-cms/backoffice/external/lit";
+import { LitElement as v, html as l, css as S, property as s, state as h, customElement as f } from "@umbraco-cms/backoffice/external/lit";
 import { UMB_NOTIFICATION_CONTEXT as m } from "@umbraco-cms/backoffice/notification";
 import { g as T, p as c } from "./api-utils-CmgJo3fQ.js";
-var w = Object.defineProperty, x = Object.getOwnPropertyDescriptor, y = (t) => {
+var A = Object.defineProperty, w = Object.getOwnPropertyDescriptor, y = (t) => {
   throw TypeError(t);
-}, s = (t, e, i, r) => {
-  for (var n = r > 1 ? void 0 : r ? x(e, i) : e, p = t.length - 1, g; p >= 0; p--)
-    (g = t[p]) && (n = (r ? g(e, i, n) : g(n)) || n);
-  return r && n && w(e, i, n), n;
-}, d = (t, e, i) => e.has(t) || y("Cannot " + i), K = (t, e, i) => (d(t, e, "read from private field"), e.get(t)), A = (t, e, i) => e.has(t) ? y("Cannot add the same private member more than once") : e instanceof WeakSet ? e.add(t) : e.set(t, i), $ = (t, e, i, r) => (d(t, e, "write to private field"), e.set(t, i), i), l;
-let a = class extends b(
+}, a = (t, e, o, n) => {
+  for (var r = n > 1 ? void 0 : n ? w(e, o) : e, p = t.length - 1, g; p >= 0; p--)
+    (g = t[p]) && (r = (n ? g(e, o, r) : g(r)) || r);
+  return n && r && A(e, o, r), r;
+}, d = (t, e, o) => e.has(t) || y("Cannot " + o), x = (t, e, o) => (d(t, e, "read from private field"), e.get(t)), K = (t, e, o) => e.has(t) ? y("Cannot add the same private member more than once") : e instanceof WeakSet ? e.add(t) : e.set(t, o), $ = (t, e, o, n) => (d(t, e, "write to private field"), e.set(t, o), o), u;
+let i = class extends b(
   v
 ) {
   constructor() {
-    super(), A(this, l), this.textApiKey = "", this.textModel = "", this.googleApiKey = "", this.googleSearchRegion = "", this.googleSearchRights = "", this.customSearchEngineKey = "", this.stabilityApiKey = "", this.aliases = "", this.showTextSectionTab = !0, this.showImageSectionTab = !1, this.showConfigurationDataTypes = !1, this.toggleTabs = (t) => {
+    super(), K(this, u), this.textApiKey = "", this.textModel = "", this.googleApiKey = "", this.googleSearchRegion = "", this.googleSearchRights = "", this.customSearchEngineKey = "", this.preferredImageModel = "v1", this.stabilityApiKey = "", this.stabilityApiModel = "", this.aspectRatio = "1:1", this.aliases = "", this.showTextSectionTab = !0, this.showImageSectionTab = !1, this.showConfigurationDataTypes = !1, this.toggleTabs = (t) => {
       switch (t) {
         case "search":
           this.showImageSectionTab = !1, this.showTextSectionTab = !0, this.showConfigurationDataTypes = !1;
@@ -25,7 +25,7 @@ let a = class extends b(
           this.showImageSectionTab = !1, this.showTextSectionTab = !1, this.showConfigurationDataTypes = !0;
       }
     }, this.consumeContext(m, (t) => {
-      $(this, l, t);
+      $(this, u, t);
     });
   }
   connectedCallback() {
@@ -35,7 +35,7 @@ let a = class extends b(
     const t = "/api/configuration/loadSettings";
     try {
       const e = await T(t);
-      this.textApiKey = e.textApiKey || "", this.textModel = e.textModel || "", this.googleApiKey = e.googleApiKey || "", this.googleSearchRegion = e.googleSearchRegion || "", this.googleSearchRights = e.googleSearchRights || "", this.customSearchEngineKey = e.customSearchEngineKey || "", this.stabilityApiKey = e.stabilityApiKey || "";
+      this.textApiKey = e.textApiKey || "", this.textModel = e.textModel || "", this.googleApiKey = e.googleApiKey || "", this.googleSearchRegion = e.googleSearchRegion || "", this.googleSearchRights = e.googleSearchRights || "", this.customSearchEngineKey = e.customSearchEngineKey || "", this.stabilityApiKey = e.stabilityApiKey || "", this.stabilityApiModel = e.stabilityApiModel || "", this.preferredImageModel = e.preferredImageModel || "v1", this.aspectRatio = e.aspectRatio || "1:1";
     } catch {
       this.showNotification("Error loading settings", "danger");
     }
@@ -49,15 +49,18 @@ let a = class extends b(
         customSearchEngineKey: this.customSearchEngineKey,
         googleSearchRegion: this.googleSearchRegion,
         googleSearchRights: this.googleSearchRights,
-        stabilityApiKey: this.stabilityApiKey
+        stabilityApiKey: this.stabilityApiKey,
+        stabilityApiModel: this.stabilityApiModel,
+        preferredImageModel: this.preferredImageModel,
+        aspectRatio: this.aspectRatio
       }), this.showNotification("Settings saved successfully", "positive");
     } catch {
       this.showNotification("Error saving settings", "danger");
     }
   }
   showNotification(t, e) {
-    var i;
-    (i = K(this, l)) == null || i.peek(e, {
+    var o;
+    (o = x(this, u)) == null || o.peek(e, {
       data: {
         message: t
       }
@@ -76,7 +79,7 @@ let a = class extends b(
     }
   }
   render() {
-    return u`
+    return l`
       <div class="settings">
         <div class="settings-container">
           <h2>umContentCreator Settings</h2>
@@ -89,7 +92,7 @@ let a = class extends b(
     `;
   }
   _renderTabs() {
-    return u`
+    return l`
       <uui-tab
         label="text-section-tab"
         @click="${() => this.toggleTabs("search")}"
@@ -117,7 +120,7 @@ let a = class extends b(
     `;
   }
   _renderActiveTab() {
-    return this.showTextSectionTab ? u`
+    return this.showTextSectionTab ? l`
         <div>
           <div class="settingsForm">
             <uui-label for="apiKey">Enter your API key:</uui-label>
@@ -148,7 +151,7 @@ let a = class extends b(
             .disabled=${!this.textApiKey}
           ></uui-button>
         </div>
-      ` : this.showImageSectionTab ? u`
+      ` : this.showImageSectionTab ? l`
         <div>
           <div class="settingsForm">
             <uui-label for="apiKey">Google API key:</uui-label>
@@ -192,6 +195,41 @@ let a = class extends b(
               @input=${(t) => this.stabilityApiKey = t.target.value}
             >
             </uui-input-password>
+             <uui-label id="image-api-version-label">Stability API Version</uui-label>
+            <uui-radio-group
+              name="imageApiVersion"
+              .value=${this.preferredImageModel}
+              @change=${(t) => this.preferredImageModel = t.target.value}
+              aria-labelledby="image-api-version-label"
+            >
+              <uui-radio
+                value="v1"
+                label="Stability v1"
+              ></uui-radio>
+              <uui-radio 
+                value="v2"
+                label="Stability v2"
+              ></uui-radio>
+            </uui-radio-group>
+        ${this.preferredImageModel === "v2" ? l`
+              <uui-label for="stabilityModel">Stability API Model:</uui-label>
+              <uui-input
+                id="stabilityModel"
+                label="Stability API Model"
+                .value=${this.stabilityApiModel}
+                @input=${(t) => this.stabilityApiModel = t.target.value}
+              ></uui-input>
+
+              <!-- Aspect Ratio Select -->
+              <uui-label for="aspectRatio">Aspect Ratio</uui-label>
+              <uui-input
+                    id="aspectRatio"
+                    label="Aspect Ratio"
+                    .value=${this.aspectRatio}
+                    @input=${(t) => this.aspectRatio = t.target.value}
+                  >
+                  </uui-input>
+            ` : null}
           </div>
           <uui-button
             style="width: 100%; --uui-button-content-align: center;"
@@ -202,7 +240,7 @@ let a = class extends b(
             .disabled=${!this.textApiKey}
           ></uui-button>
         </div>
-      ` : this.showConfigurationDataTypes ? u`
+      ` : this.showConfigurationDataTypes ? l`
         <div class="configuration-text">
           <uui-textarea
             pristine=""
@@ -227,8 +265,8 @@ let a = class extends b(
       ` : null;
   }
 };
-l = /* @__PURE__ */ new WeakMap();
-a.styles = S`
+u = /* @__PURE__ */ new WeakMap();
+i.styles = S`
     .settings-container {
       width: 100%;
       max-width: 600px;
@@ -254,43 +292,52 @@ a.styles = S`
       margin-top: 15px;
     }
   `;
-s([
-  o({ type: String })
-], a.prototype, "textApiKey", 2);
-s([
-  o({ type: String })
-], a.prototype, "textModel", 2);
-s([
-  o({ type: String })
-], a.prototype, "googleApiKey", 2);
-s([
-  o({ type: String })
-], a.prototype, "googleSearchRegion", 2);
-s([
-  o({ type: String })
-], a.prototype, "googleSearchRights", 2);
-s([
-  o({ type: String })
-], a.prototype, "customSearchEngineKey", 2);
-s([
-  o({ type: String })
-], a.prototype, "stabilityApiKey", 2);
-s([
-  o({ type: String })
-], a.prototype, "aliases", 2);
-s([
+a([
+  s({ type: String })
+], i.prototype, "textApiKey", 2);
+a([
+  s({ type: String })
+], i.prototype, "textModel", 2);
+a([
+  s({ type: String })
+], i.prototype, "googleApiKey", 2);
+a([
+  s({ type: String })
+], i.prototype, "googleSearchRegion", 2);
+a([
+  s({ type: String })
+], i.prototype, "googleSearchRights", 2);
+a([
+  s({ type: String })
+], i.prototype, "customSearchEngineKey", 2);
+a([
+  s({ type: String })
+], i.prototype, "preferredImageModel", 2);
+a([
+  s({ type: String })
+], i.prototype, "stabilityApiKey", 2);
+a([
+  s({ type: String })
+], i.prototype, "stabilityApiModel", 2);
+a([
+  s({ type: String })
+], i.prototype, "aspectRatio", 2);
+a([
+  s({ type: String })
+], i.prototype, "aliases", 2);
+a([
   h()
-], a.prototype, "showTextSectionTab", 2);
-s([
+], i.prototype, "showTextSectionTab", 2);
+a([
   h()
-], a.prototype, "showImageSectionTab", 2);
-s([
+], i.prototype, "showImageSectionTab", 2);
+a([
   h()
-], a.prototype, "showConfigurationDataTypes", 2);
-a = s([
+], i.prototype, "showConfigurationDataTypes", 2);
+i = a([
   f("um-content-creator-dashboard")
-], a);
+], i);
 export {
-  a as default
+  i as default
 };
-//# sourceMappingURL=umContentCreator-dashboard-CnzERI7z.js.map
+//# sourceMappingURL=umContentCreator-dashboard-XzTBy7Cg.js.map

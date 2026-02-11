@@ -144,17 +144,17 @@ export class UmbPropertyEditorUIMediaPickerElement
     super();
 
     this.consumeContext(UMB_PROPERTY_CONTEXT, (instance) => {
-      this.observe(instance.alias, (alias) => (this._alias = alias));
+      this.observe(instance?.alias, (alias) => (this._alias = alias));
       this.observe(
-        instance.variantId,
+        instance?.variantId,
         (variantId) => (this._variantId = variantId?.toString() || "invariant")
       );
-      this.configurationModal.alias = instance.getAlias();
-      this.configurationModal.value = instance.getValue();
+      this.configurationModal.alias = instance?.getAlias();
+      this.configurationModal.value = instance?.getValue();
     });
 
     this.consumeContext(UMB_DOCUMENT_WORKSPACE_CONTEXT, (instance) => {
-      const pageId = instance.getUnique();
+      const pageId = instance?.getUnique();
       localStorage.setItem('configurationModal_pageId', pageId as string);
     });
 

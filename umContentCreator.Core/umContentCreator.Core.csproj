@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>15.0.1</Version>
+    <Version>17.0.0</Version>
     <PackageId>umContentCreator.Core</PackageId>
     <Title>umContentCreator.Core</Title>
     <Authors>OSKI solutions</Authors>
     <Product>umContentCreator.Core</Product>
-    <AssemblyVersion>15.0.1</AssemblyVersion>
+    <AssemblyVersion>17.0.0</AssemblyVersion>
     <Description>This package contains the core logic of the umContentCreator package.</Description>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/Kirill19837/umContentCreator</RepositoryUrl>
@@ -19,8 +19,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Umbraco.Cms.Core" Version="15.3.1" />
-    <PackageReference Include="Umbraco.Cms.Web.Common" Version="15.3.1" />
+    <PackageReference Include="Umbraco.Cms.Core" Version="17.1.0" />
+    <PackageReference Include="Umbraco.Cms.Web.Common" Version="17.1.0" />
 	<PackageReference Include="Azure.AI.OpenAI" Version="1.0.0-beta.17" />
 	<PackageReference Include="MarkdownSharp" Version="2.0.5" />
 	<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

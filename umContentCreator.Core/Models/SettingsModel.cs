@@ -9,4 +9,8 @@ public class SettingsModel
     public string GoogleSearchRegion { get; set; }
     public string GoogleSearchRights { get; set; }
     public string StabilityApiKey { get; set; }
+    public string StabilityApiModel { get; set; }
+    public string PreferredImageModel { get; set; }
+    public string AspectRatio { get; set; }
+
 }

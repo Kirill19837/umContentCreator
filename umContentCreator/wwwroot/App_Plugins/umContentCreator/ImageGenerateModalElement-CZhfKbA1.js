@@ -1,18 +1,18 @@
 import { LitElement as v, html as o, css as f, property as l, state as p, customElement as w } from "@umbraco-cms/backoffice/external/lit";
 import { UmbTextStyles as _ } from "@umbraco-cms/backoffice/style";
-import { a as m } from "./api-utils-CmgJo3fQ.js";
+import { a as g } from "./api-utils-CmgJo3fQ.js";
 import { UMB_NOTIFICATION_CONTEXT as x } from "@umbraco-cms/backoffice/notification";
 import { UmbElementMixin as $ } from "@umbraco-cms/backoffice/element-api";
 var C = Object.defineProperty, T = Object.getOwnPropertyDescriptor, b = (e) => {
   throw TypeError(e);
 }, s = (e, t, a, n) => {
-  for (var r = n > 1 ? void 0 : n ? T(t, a) : t, h = e.length - 1, c; h >= 0; h--)
-    (c = e[h]) && (r = (n ? c(t, a, r) : c(r)) || r);
+  for (var r = n > 1 ? void 0 : n ? T(t, a) : t, h = e.length - 1, u; h >= 0; h--)
+    (u = e[h]) && (r = (n ? u(t, a, r) : u(r)) || r);
   return n && r && C(t, a, r), r;
-}, y = (e, t, a) => t.has(e) || b("Cannot " + a), I = (e, t, a) => (y(e, t, "read from private field"), t.get(e)), k = (e, t, a) => t.has(e) ? b("Cannot add the same private member more than once") : t instanceof WeakSet ? t.add(e) : t.set(e, a), S = (e, t, a, n) => (y(e, t, "write to private field"), t.set(e, a), a), u;
+}, y = (e, t, a) => t.has(e) || b("Cannot " + a), I = (e, t, a) => (y(e, t, "read from private field"), t.get(e)), G = (e, t, a) => t.has(e) ? b("Cannot add the same private member more than once") : t instanceof WeakSet ? t.add(e) : t.set(e, a), k = (e, t, a, n) => (y(e, t, "write to private field"), t.set(e, a), a), c;
 let i = class extends $(v) {
   constructor() {
-    super(), this.isGenerating = !1, this.searchQuery = "", this.currentPage = 1, this.totalResults = 0, this.prompt = "", this.images = [], this.selectedImage = -1, this.showSearchTab = !0, this.showGenerateTab = !1, k(this, u), this.toggleTabs = (e) => {
+    super(), this.isGenerating = !1, this.searchQuery = "", this.currentPage = 1, this.totalResults = 0, this.prompt = "", this.images = [], this.selectedImage = -1, this.showSearchTab = !0, this.showGenerateTab = !1, G(this, c), this.toggleTabs = (e) => {
       switch (this.images = [], e) {
         case "search":
           this.showGenerateTab = !1, this.showSearchTab = !0;
@@ -22,13 +22,13 @@ let i = class extends $(v) {
           break;
       }
     }, this.consumeContext(x, (e) => {
-      S(this, u, e);
+      k(this, c, e);
     });
   }
   async _searchImage() {
     this.images = [];
     try {
-      const e = await m("/api/umContentCreator/searchImage", {
+      const e = await g("/api/umContentCreator/searchImage", {
         query: this.searchQuery,
         currentPage: this.currentPage,
         pageSize: 10
@@ -41,14 +41,14 @@ let i = class extends $(v) {
   async _saveImage() {
     var e, t, a, n, r, h;
     try {
-      const c = ((a = (t = (e = this.modalContext) == null ? void 0 : e.data) == null ? void 0 : t.value) == null ? void 0 : a.map((g) => ({
-        key: g.key,
-        mediaKey: g.mediaKey
-      }))) ?? [], d = await m("/api/umContentCreator/createMediaItemFromUrl", {
+      const u = ((a = (t = (e = this.modalContext) == null ? void 0 : e.data) == null ? void 0 : t.value) == null ? void 0 : a.map((m) => ({
+        key: m.key,
+        mediaKey: m.mediaKey
+      }))) ?? [], d = await g("/api/umContentCreator/createMediaItemFromUrl", {
         url: this.showSearchTab ? this.images[this.selectedImage] : "",
         base64: this.showGenerateTab ? this.images[this.selectedImage] : "",
         alias: (n = this.modalContext) == null ? void 0 : n.data.alias,
-        mediaFiles: c
+        mediaFiles: u
       });
       (r = this.modalContext) == null || r.updateValue({
         key: d.key,
@@ -75,26 +75,34 @@ let i = class extends $(v) {
   }
   async _generateImage() {
     var e, t;
-    try {
-      const a = await m(
-        "/api/umContentCreator/getGenerateImage",
-        {
-          prompt: this.prompt,
-          negativePrompts: (e = this.modalContext) == null ? void 0 : e.data.negativePrompts,
-          numberOfImages: (t = this.modalContext) == null ? void 0 : t.data.numberGenerate
-        }
-      );
-      this.images = a, this.showNotification("The image was successfully generated", "positive");
-    } catch (a) {
-      this.showNotification(
-        "Generation error while creating media: " + a,
-        "danger"
-      );
+    if (!this.isGenerating) {
+      this.isGenerating = !0;
+      try {
+        const a = await g(
+          "/api/umContentCreator/getGenerateImage",
+          {
+            prompt: this.prompt,
+            negativePrompts: (e = this.modalContext) == null ? void 0 : e.data.negativePrompts,
+            numberOfImages: (t = this.modalContext) == null ? void 0 : t.data.numberGenerate
+          }
+        );
+        this.images = a, this.showNotification(
+          "The image was successfully generated",
+          "positive"
+        );
+      } catch (a) {
+        this.showNotification(
+          "Generation error while creating media: " + a,
+          "danger"
+        );
+      } finally {
+        this.isGenerating = !1;
+      }
     }
   }
   showNotification(e, t) {
     var a;
-    (a = I(this, u)) == null || a.peek(t, {
+    (a = I(this, c)) == null || a.peek(t, {
       data: {
         message: e
       }
@@ -208,7 +216,8 @@ let i = class extends $(v) {
                 pristine="" 
                 label=${this.images.length > 0 ? "Regenerate" : "Generate"}
                 look="primary"
-                ?disabled=${!this.prompt}
+                state=${this.isGenerating ? "waiting" : void 0}
+                ?disabled=${!this.prompt || this.isGenerating}
                 @click=${this._generateImage}></uui-button>
                 ${this.images.length && this.selectedImage >= 0 ? o`
                         <uui-button
@@ -243,7 +252,7 @@ let i = class extends $(v) {
     `;
   }
 };
-u = /* @__PURE__ */ new WeakMap();
+c = /* @__PURE__ */ new WeakMap();
 i.styles = [
   _,
   f`
@@ -325,4 +334,4 @@ i = s([
 export {
   i as default
 };
-//# sourceMappingURL=ImageGenerateModalElement-CQL-BGQ1.js.map
+//# sourceMappingURL=ImageGenerateModalElement-CZhfKbA1.js.map

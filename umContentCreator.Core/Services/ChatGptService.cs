@@ -1,13 +1,9 @@
-﻿using System.Net.Http.Headers;
-using System.Text;
-using Azure;
+﻿using Azure;
 using Azure.AI.OpenAI;
 using MarkdownSharp;
-using Newtonsoft.Json;
 using umContentCreator.Core.Interfaces;
 using umContentCreator.Core.Models;
 using static Umbraco.Cms.Core.Constants.PropertyEditors.Aliases;
-using StackExchange.Profiling.Internal;
 
 
 
@@ -41,7 +37,7 @@ public class ChatGptService : IChatGptService
         ChatResponseMessage responseMessage = response.Value.Choices[0].Message;
         var returnedText = await GetGeneratedText(response);
 
-        return model.PropertyEditorAlias is TinyMce ? new Markdown().Transform(returnedText) : returnedText;
+        return model.PropertyEditorAlias is RichText ? new Markdown().Transform(returnedText) : returnedText;
     }
 
     private static async Task<string> GetGeneratedText(Response<ChatCompletions> response)

@@ -60,8 +60,8 @@ export default class CustomTextAreaPropertyEditorUIElement
   constructor() {
     super();
     this.consumeContext(UMB_PROPERTY_CONTEXT, (instance) => {
-      this.configurationModal.caption = instance.getAlias();
-      this.configurationModal.value = instance.getValue();
+      this.configurationModal.caption = instance?.getAlias();
+      this.configurationModal.value = instance?.getValue();
     });
     this.consumeContext(UMB_MODAL_MANAGER_CONTEXT, (instance) => {
       this.#modalManagerContext = instance;
